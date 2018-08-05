@@ -1,9 +1,5 @@
-RSpec.describe Answersengine do
+RSpec.describe AnswersEngine do
   it "has a version number" do
-    expect(Answersengine::VERSION).not_to be nil
-  end
-
-  it "does something useful" do
-    expect(false).to eq(true)
+    expect(AnswersEngine::VERSION).not_to be nil
   end
 end

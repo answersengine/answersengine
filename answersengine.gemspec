@@ -5,7 +5,7 @@ require "answersengine/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "answersengine"
-  spec.version       = Answersengine::VERSION
+  spec.version       = AnswersEngine::VERSION
   spec.authors       = ["Parama Danoesubroto"]
   spec.email         = ["parama@answersengine.com"]
 

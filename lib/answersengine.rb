@@ -1,5 +1,5 @@
 require "answersengine/version"
+require "answersengine/scraper"
 
-module Answersengine
-  # Your code goes here...
+module AnswersEngine
 end
