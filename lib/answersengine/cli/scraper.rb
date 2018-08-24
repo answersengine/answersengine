@@ -1,3 +1,4 @@
+require 'answersengine/cli/job'
 module AnswersEngine
   class CLI < Thor
     class Scraper < Thor
@@ -64,6 +65,8 @@ module AnswersEngine
         puts "#{client.find(scraper_id)}"
       end
 
+      desc "scraper job SUBCOMMAND ...ARGS", "manage scrapers jobs"
+      subcommand "job", Job
     end
   end
 
