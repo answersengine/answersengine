@@ -22,7 +22,7 @@ module AnswersEngine
       desc "list", "List scrapers"
       option :page
       def list
-        puts AnswersEngine::Scraper.list(page: options[:page])
+        puts AnswersEngine::Scraper.list(options)
       end
     end
   end
