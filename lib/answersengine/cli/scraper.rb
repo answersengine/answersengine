@@ -18,6 +18,12 @@ module AnswersEngine
       def parse(parser_type, parser_file, gid)
         puts AnswersEngine::Scraper::Parser.parse(parser_type, parser_file, gid)
       end
+
+      desc "list", "List scrapers"
+      option :page
+      def list
+        puts AnswersEngine::Scraper.list(page: options[:page])
+      end
     end
   end
 
