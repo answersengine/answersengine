@@ -8,10 +8,13 @@ module AnswersEngine
       AUTH_TOKEN = ENV['ANSWERSENGINE_TOKEN']
 
       def initialize(opts={})
-        @options = { headers: {"Authorization" => "Bearer #{AUTH_TOKEN}"}}
+        @options = { headers: {
+          "Authorization" => "Bearer #{AUTH_TOKEN}", 
+          "Content-Type" => "application/json",
+          }}
 
         query = {}
-        query[:page] = opts[:page] if opts[:page]
+        query[:p] = opts[:page] if opts[:page]
 
         unless query.empty? 
           @options.merge!(query: query)

@@ -21,14 +21,27 @@ module AnswersEngine
 
       desc "list", "List scrapers"
       option :page, :aliases => :p
-          long_desc <<-LONGDESC
-            List scrapers.
-       
-            With --page or -p option to get the next set of records by page.
-          LONGDESC
+      long_desc <<-LONGDESC
+        List scrapers.
+   
+        With --page or -p option to get the next set of records by page.
+      LONGDESC
       def list
-        puts AnswersEngine::Scraper.list(options)
+        client = Client::Scraper.new(options)
+        puts "#{client.all}"
       end
+
+      desc "create <name> <git_repository>", "Create a scraper"
+      long_desc <<-LONGDESC
+          Creates a scraper
+          With --branch or -b option to set the branch. Defaults to master.
+          LONGDESC
+      option :branch, :aliases => :b
+      def create(name, git_repository)
+        client = Client::Scraper.new(options)
+        puts "#{client.create(name, git_repository, options)}"
+      end
+
     end
   end
 
