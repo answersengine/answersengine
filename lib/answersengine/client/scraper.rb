@@ -29,8 +29,6 @@ module AnswersEngine
 
         self.class.put("/scrapers/#{scraper_id}", @options)
       end
-
-
     end
   end
 end

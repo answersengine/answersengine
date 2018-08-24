@@ -64,8 +64,21 @@ module AnswersEngine
         puts "#{client.find(scraper_id)}"
       end
 
+      desc "deploy <scraper_id>", "Deploy a scraper"
+      long_desc <<-LONGDESC
+          Deploys a scraper
+          LONGDESC
+      def deploy(scraper_id)
+        client = Client::ScraperDeployment.new()
+        puts "Deploying scraper. This may take a while..."
+        puts "#{client.deploy(scraper_id)}"
+      end
+
       desc "scraper job SUBCOMMAND ...ARGS", "manage scrapers jobs"
       subcommand "job", Job
+
+      desc "scraper deployment SUBCOMMAND ...ARGS", "manage scrapers deployments"
+      subcommand "deployment", ScraperDeployment
     end
   end
 

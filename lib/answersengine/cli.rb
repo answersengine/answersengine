@@ -1,6 +1,7 @@
 require 'thor'
 require 'answersengine/scraper'
 require 'answersengine/cli/job'
+require 'answersengine/cli/scraper_deployment'
 require 'answersengine/cli/scraper'
 
 
