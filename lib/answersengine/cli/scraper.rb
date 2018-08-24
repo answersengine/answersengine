@@ -1,4 +1,3 @@
-require 'answersengine/cli/job'
 module AnswersEngine
   class CLI < Thor
     class Scraper < Thor

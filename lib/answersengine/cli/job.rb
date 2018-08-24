@@ -15,9 +15,11 @@ module AnswersEngine
             With --page or -p option to get the next set of records by page.
           LONGDESC
       def list(scraper_id)
-        # puts AnswersEngine::Scraper:(scraper_id)
-        puts "hello"
+        client = Client::Job.new(options)
+        puts "#{client.all(scraper_id)}"
       end
+
+
 
       
     end
