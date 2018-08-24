@@ -20,7 +20,12 @@ module AnswersEngine
       end
 
       desc "list", "List scrapers"
-      option :page
+      option :page, :aliases => :p
+          long_desc <<-LONGDESC
+            List scrapers.
+       
+            With --page or -p option to get the next set of records by page.
+          LONGDESC
       def list
         puts AnswersEngine::Scraper.list(options)
       end
