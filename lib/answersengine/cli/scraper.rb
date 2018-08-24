@@ -42,6 +42,12 @@ module AnswersEngine
         puts "#{client.create(name, git_repository, options)}"
       end
 
+      desc "show <scraper_id>", "Show a scraper"
+      def show(scraper_id)
+        client = Client::Scraper.new(options)
+        puts "#{client.find(scraper_id)}"
+      end
+
     end
   end
 
