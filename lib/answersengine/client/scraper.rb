@@ -18,6 +18,19 @@ module AnswersEngine
           })
         self.class.post("/scrapers", @options)
       end
+
+      def update(scraper_id, opts={})
+        body = {}
+
+        body[:name] = opts[:name] if opts[:name]
+        body[:git_repository] = opts[:repo] if opts[:repo]
+        body[:git_branch] = opts[:branch] if opts[:branch]
+        @options.merge!({body: body.to_json})
+
+        self.class.put("/scrapers/#{scraper_id}", @options)
+      end
+
+
     end
   end
 end

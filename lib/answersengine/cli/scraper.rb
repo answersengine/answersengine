@@ -42,6 +42,22 @@ module AnswersEngine
         puts "#{client.create(name, git_repository, options)}"
       end
 
+      desc "update <scraper_id>", "Update a scraper"
+      long_desc <<-LONGDESC
+          Updates a scraper
+          With --name or -n option to set the scraper name.
+          With --branch or -b option to set the branch name.
+          With --repo or -r option to set the git repository.
+          LONGDESC
+      option :branch, :aliases => :b
+      option :name, :aliases => :n
+      option :repo, :aliases => :r
+      def update(scraper_id)
+        client = Client::Scraper.new(options)
+        puts "#{client.update(scraper_id, options)}"
+      end
+
+
       desc "show <scraper_id>", "Show a scraper"
       def show(scraper_id)
         client = Client::Scraper.new(options)
