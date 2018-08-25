@@ -1,22 +1,22 @@
 module AnswersEngine
   class CLI < Thor
-    class Job < Thor
-      package_name "job"
+    class ScraperJob < Thor
+      package_name "scraper job"
       def self.banner(command, namespace = nil, subcommand = false)
         "#{basename} #{@package_name} #{command.usage}"
       end
 
 
-      desc "list", "gets a list of jobs"
+      desc "list <scraper_id>", "gets a list of jobs on a scraper"
       option :page, :aliases => :p
           long_desc <<-LONGDESC
-            List scrape jobs.
+            List jobs on a scraper.
        
             With --page or -p option to get the next set of records by page.
           LONGDESC
-      def list()
-        client = Client::Job.new(options)
-        puts "#{client.all()}"
+      def list(scraper_id)
+        client = Client::ScraperJob.new(options)
+        puts "#{client.all(scraper_id)}"
       end
       
     end

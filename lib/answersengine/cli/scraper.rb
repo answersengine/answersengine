@@ -75,7 +75,7 @@ module AnswersEngine
       end
 
       desc "scraper job SUBCOMMAND ...ARGS", "manage scrapers jobs"
-      subcommand "job", Job
+      subcommand "job", ScraperJob
 
       desc "scraper deployment SUBCOMMAND ...ARGS", "manage scrapers deployments"
       subcommand "deployment", ScraperDeployment
