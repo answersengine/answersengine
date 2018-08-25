@@ -82,6 +82,17 @@ module AnswersEngine
         puts "#{client.deploy(scraper_id)}"
       end
 
+      desc "start <scraper_id>", "Starts a scraper"
+      long_desc <<-LONGDESC
+          Starts a scraper by crating an active scrape job
+          LONGDESC
+      def start(scraper_id)
+        client = Client::ScraperJob.new()
+        puts "Starting a scrape job..."
+        puts "#{client.create(scraper_id)}"
+      end
+
+
       desc "scraper job SUBCOMMAND ...ARGS", "manage scrapers jobs"
       subcommand "job", ScraperJob
 
