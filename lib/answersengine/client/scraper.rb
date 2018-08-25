@@ -11,11 +11,15 @@ module AnswersEngine
       end
 
       def create(name, git_repository, opts={})
-        @options.merge!({body: {
+        body = {
             name: name,
             git_repository: git_repository,
-            git_branch: opts[:branch] ? opts[:branch] : "master"}.to_json
-          })
+            git_branch: opts[:branch] ? opts[:branch] : "master"}
+
+        body[:freshness_type] = opts[:freshness_type] if opts[:freshness_type]
+        body[:force_fetch] = opts[:force_fetch] == "true" if opts[:force_fetch]
+
+        @options.merge!({body: body.to_json})
         self.class.post("/scrapers", @options)
       end
 
@@ -25,6 +29,8 @@ module AnswersEngine
         body[:name] = opts[:name] if opts[:name]
         body[:git_repository] = opts[:repo] if opts[:repo]
         body[:git_branch] = opts[:branch] if opts[:branch]
+        body[:freshness_type] = opts[:freshness_type] if opts[:freshness_type]
+        body[:force_fetch] = opts[:force_fetch] == "true" if opts[:force_fetch]
         @options.merge!({body: body.to_json})
 
         self.class.put("/scrapers/#{scraper_id}", @options)

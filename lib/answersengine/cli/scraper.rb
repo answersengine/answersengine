@@ -33,10 +33,14 @@ module AnswersEngine
 
       desc "create <name> <git_repository>", "Create a scraper"
       long_desc <<-LONGDESC
-          Creates a scraper
-          With --branch or -b option to set the branch. Defaults to master.
+          Creates a scraper\x5
+          With --branch or -b option to set the branch. Defaults to master.\x5
+          With --freshness-type or -t option to set day|week|month|year|any. Defaults to any\x5
+          With --force-fetch or -f option to set true or false, defaults to false .
           LONGDESC
       option :branch, :aliases => :b
+      option :freshness_type, :aliases => :t
+      option :force_fetch, :aliases => :f
       def create(name, git_repository)
         client = Client::Scraper.new(options)
         puts "#{client.create(name, git_repository, options)}"
@@ -44,14 +48,18 @@ module AnswersEngine
 
       desc "update <scraper_id>", "Update a scraper"
       long_desc <<-LONGDESC
-          Updates a scraper
-          With --name or -n option to set the scraper name.
-          With --branch or -b option to set the branch name.
-          With --repo or -r option to set the git repository.
+          Updates a scraper\x5
+          With --name or -n option to set the scraper name.\x5
+          With --branch or -b option to set the branch name.\x5
+          With --repo or -r option to set the git repo.\x5
+          With --freshness-type or -t option to set day|week|month|year|any. Defaults to any \x5
+          With --force-fetch or -f option to set true or false, defaults to false .
           LONGDESC
       option :branch, :aliases => :b
       option :name, :aliases => :n
       option :repo, :aliases => :r
+      option :freshness_type, :aliases => :t
+      option :force_fetch, :aliases => :f
       def update(scraper_id)
         client = Client::Scraper.new(options)
         puts "#{client.update(scraper_id, options)}"
