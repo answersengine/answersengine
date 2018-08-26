@@ -17,8 +17,7 @@ module AnswersEngine
       def list()
         client = Client::Job.new(options)
         puts "#{client.all()}"
-      end
-      
+      end      
     end
   end
 
