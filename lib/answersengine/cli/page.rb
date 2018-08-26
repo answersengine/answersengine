@@ -1,6 +1,7 @@
 module AnswersEngine
   class CLI < Thor
     class Page < Thor
+
       desc "list <job_id>", "List Pages on a job"
       option :page, :aliases => :p
       long_desc <<-LONGDESC
@@ -12,6 +13,13 @@ module AnswersEngine
         client = Client::JobPage.new(options)
         puts "#{client.all(job_id)}"
       end
+
+      desc "show <job_id> <gid>", "Show a page in job"
+      def show(job_id, gid)
+        client = Client::JobPage.new(options)
+        puts "#{client.find(job_id, gid)}"
+      end
+
     end
   end
 
