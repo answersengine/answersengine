@@ -20,7 +20,7 @@ module AnswersEngine
 
           With --page-type or -t option to set page_type \x5
           With --body or -b option to set body \x5
-          With --headers or -h option to set headers \x5
+          With --headers or -d option to set headers. Must be in json format. i.e: {"Foo":"bar"} \x5
           With --force-fetch or -d option to set forcefetch to true or false \x5
           With --freshness or -s option to set freshness \x5
           With --ua-type or -u option to set user agent type: mobile or desktop \x5
@@ -37,8 +37,14 @@ module AnswersEngine
       option :ua_type, :aliases => :u
       option :no_redirect, :aliases => :n, type: :boolean
       def add(job_id, method, url)
-        client = Client::JobPage.new(options)
-        puts "#{client.enqueue(job_id, method, url, options)}"
+        begin
+          options[:headers] = JSON.parse(options[:headers]) if options[:headers]
+          
+          client = Client::JobPage.new(options)
+          puts "#{client.enqueue(job_id, method, url, options)}"
+        rescue JSON::ParserError
+          puts "Error: #{options[:headers]} is not a valid JSON"
+        end
       end
 
 
