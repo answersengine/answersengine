@@ -14,6 +14,34 @@ module AnswersEngine
         puts "#{client.all(job_id)}"
       end
 
+      desc "add <job_id> <method> <url>", "Enqueues a page to the job"
+      long_desc <<-LONGDESC
+          Enqueues a page to a job\x5
+
+          With --page-type or -t option to set page_type \x5
+          With --body or -b option to set body \x5
+          With --headers or -h option to set headers \x5
+          With --force-fetch or -d option to set forcefetch to true or false \x5
+          With --freshness or -s option to set freshness \x5
+          With --ua-type or -u option to set user agent type: mobile or desktop \x5
+          With --no-redirect or -n option to set noredirect to true or false\x5
+          
+          
+          With --force-fetch or -f option to set true or false, defaults to false .
+          LONGDESC
+      option :headers, :aliases => :d, type: :string
+      option :page_type, :aliases => :t
+      option :body, :aliases => :b
+      option :force_fetch, :aliases => :f, type: :boolean
+      option :freshness, :aliases => :s
+      option :ua_type, :aliases => :u
+      option :no_redirect, :aliases => :n, type: :boolean
+      def add(job_id, method, url)
+        client = Client::JobPage.new(options)
+        puts "#{client.enqueue(job_id, method, url, options)}"
+      end
+
+
       desc "update <job_id> <gid>", "Update a page in a job"
       long_desc <<-LONGDESC
           Updates a page in a job. Only page_type is updateable
