@@ -40,7 +40,7 @@ module AnswersEngine
           LONGDESC
       option :branch, :aliases => :b
       option :freshness_type, :aliases => :t
-      option :force_fetch, :aliases => :f
+      option :force_fetch, :aliases => :f, type: :boolean
       def create(name, git_repository)
         client = Client::Scraper.new(options)
         puts "#{client.create(name, git_repository, options)}"
@@ -59,7 +59,7 @@ module AnswersEngine
       option :name, :aliases => :n
       option :repo, :aliases => :r
       option :freshness_type, :aliases => :t
-      option :force_fetch, :aliases => :f
+      option :force_fetch, :aliases => :f, type: :boolean
       def update(scraper_id)
         client = Client::Scraper.new(options)
         puts "#{client.update(scraper_id, options)}"
