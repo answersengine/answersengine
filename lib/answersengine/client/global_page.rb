@@ -4,6 +4,14 @@ module AnswersEngine
       def find(gid)
         self.class.get("/global_pages/#{gid}", @options)
       end
+
+      def find_content(gid)
+        self.class.get("/global_pages/#{gid}/content", @options)
+      end
+
+      def find_failed_content(gid)
+        self.class.get("/global_pages/#{gid}/failed_content", @options)
+      end
     end
   end
 end
