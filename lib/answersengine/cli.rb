@@ -6,6 +6,7 @@ require 'answersengine/cli/page'
 require 'answersengine/cli/job'
 require 'answersengine/cli/scraper_deployment'
 require 'answersengine/cli/scraper'
+require 'answersengine/cli/parser'
 
 
 module AnswersEngine
@@ -21,6 +22,9 @@ module AnswersEngine
 
     desc "globalpage SUBCOMMAND ...ARGS", "interacts with global page"
     subcommand "globalpage", GlobalPage
+
+    desc "parser SUBCOMMAND ...ARGS", "for parsing related activities"
+    subcommand "parser", Parser
 
   end
 end
