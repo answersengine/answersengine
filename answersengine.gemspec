@@ -39,4 +39,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "aruba"
   spec.add_dependency "thor"
   spec.add_dependency 'httparty', '~> 0.16.2'
+  spec.add_dependency 'nokogiri', '~> 1.6', '>= 1.6.8'
 end

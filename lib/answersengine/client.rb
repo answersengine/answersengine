@@ -5,6 +5,7 @@ require "answersengine/client/scraper_job"
 require "answersengine/client/job"
 require "answersengine/client/global_page"
 require "answersengine/client/job_page"
+require "answersengine/client/gcs_content"
 
 
 module AnswersEngine

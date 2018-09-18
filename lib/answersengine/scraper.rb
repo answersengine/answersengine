@@ -1,4 +1,7 @@
+require "answersengine/scraper/page"
 require "answersengine/scraper/parser"
+require "answersengine/scraper/executor"
+require "answersengine/scraper/ruby_executor"
 require "answersengine/client"
 
 module AnswersEngine

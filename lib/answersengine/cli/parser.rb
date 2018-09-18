@@ -14,7 +14,7 @@ module AnswersEngine
             answersengine parser try index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\n
           LONGDESC
       def try_parse(parser_file, gid)
-        puts AnswersEngine::Scraper::Parser.parse(parser_file, gid)
+        puts AnswersEngine::Scraper::Parser.parse_global_page(parser_file, gid)
       end
     end
   end

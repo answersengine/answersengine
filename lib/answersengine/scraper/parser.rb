@@ -1,8 +1,15 @@
 module AnswersEngine
   module Scraper
     class Parser
-      def self.parse(parser_file, gid)
-         "Parsing parser_file:#{parser_file} gid:#{gid}"
+      def self.parse_global_page(filename, gid)
+        extname = File.extname(filename)
+        case extname
+        when '.rb'
+          executor = RubyExecutor.new(filename: filename, gid: gid)
+          executor.execute_global_page_parser
+        else
+          puts "Unable to find a parser executor for file type \"#{extname}\""
+        end
       end
     end
   end
