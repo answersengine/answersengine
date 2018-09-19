@@ -1,0 +1,3 @@
+url, page_type
+http://fetchtest.datahen.com, home
+http://fetchtest.datahen.com/statuses/200, status200

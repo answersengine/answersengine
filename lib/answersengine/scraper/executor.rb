@@ -4,11 +4,6 @@ module AnswersEngine
     class Executor
       attr_accessor :filename, :gid, :job_id
 
-      def initialize(options={})
-        @filename = options.fetch(:filename) { raise "Filename is required"}
-        @gid = options.fetch(:gid) { raise "GID is required"}
-        @job_id = options.fetch(:job_id)
-      end
 
       def try_parser
         raise "should be implemented in subclass"

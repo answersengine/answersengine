@@ -1,12 +1,19 @@
 module AnswersEngine
   module Scraper
-    class RubyExecutor < Executor
+    class RubyParserExecutor < Executor
+
+      def initialize(options={})
+        @filename = options.fetch(:filename) { raise "Filename is required"}
+        @gid = options.fetch(:gid) { raise "GID is required"}
+        @job_id = options.fetch(:job_id)
+      end
+
 
       def try_parser
-        try_script
+        try_parser_script
       end
-      
-      def try_script
+
+      def try_parser_script
         proc = Proc.new do
           page = init_page
           outputs = []

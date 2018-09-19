@@ -7,6 +7,7 @@ require 'answersengine/cli/job'
 require 'answersengine/cli/scraper_deployment'
 require 'answersengine/cli/scraper'
 require 'answersengine/cli/parser'
+require 'answersengine/cli/seeder'
 
 
 module AnswersEngine
@@ -25,6 +26,9 @@ module AnswersEngine
 
     desc "parser SUBCOMMAND ...ARGS", "for parsing related activities"
     subcommand "parser", Parser
+
+    desc "seeder SUBCOMMAND ...ARGS", "for seeding related activities"
+    subcommand "seeder", Seeder
 
   end
 end
