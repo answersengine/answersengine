@@ -2,19 +2,36 @@ require 'nokogiri'
 module AnswersEngine
   module Scraper
     class Executor
-      attr_accessor :filename, :gid
+      attr_accessor :filename, :gid, :job_id
 
       def initialize(options={})
         @filename = options.fetch(:filename) { raise "Filename is required"}
         @gid = options.fetch(:gid) { raise "GID is required"}
+        @job_id = options.fetch(:job_id)
       end
 
-      def execute_global_page_parser
+      def try_parser
         raise "should be implemented in subclass"
       end
 
-      def init_page(options={})
-        client = Client::GlobalPage.new(options)
+      def init_page()
+        if job_id 
+          puts "job_page is called"
+          init_job_page
+        else
+          puts "global_page is called"
+          init_global_page() 
+        end
+        
+      end
+
+      def init_job_page()
+        client = Client::JobPage.new()
+        client.find(job_id, gid)
+      end
+
+      def init_global_page()
+        client = Client::GlobalPage.new()
         client.find(gid)
       end
 

@@ -2,13 +2,13 @@ module AnswersEngine
   module Scraper
     class RubyExecutor < Executor
 
-      def execute_global_page_parser
-        try_script_on_global_page
+      def try_parser
+        try_script
       end
       
-      def try_script_on_global_page
+      def try_script
         proc = Proc.new do
-          page = init_page(gid: gid)
+          page = init_page
           outputs = []
           pages = []
           content = get_content(gid)
