@@ -11,10 +11,10 @@ module AnswersEngine
 
       def init_page()
         if job_id 
-          puts "job_page is called"
+          puts "getting Job Page"
           init_job_page
         else
-          puts "global_page is called"
+          puts "getting Global Page"
           init_global_page() 
         end
         
@@ -22,7 +22,13 @@ module AnswersEngine
 
       def init_job_page()
         client = Client::JobPage.new()
-        client.find(job_id, gid)
+        job_page = client.find(job_id, gid)
+        unless job_page.code == 200
+          raise "Job #{job_id} or GID #{gid} not found. Aborting execution!"
+        else
+          job_page
+        end
+        
       end
 
       def init_global_page()
