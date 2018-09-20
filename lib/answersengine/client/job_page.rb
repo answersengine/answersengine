@@ -34,6 +34,17 @@ module AnswersEngine
 
         self.class.post("/jobs/#{job_id}/pages", @options)
       end
+
+      def parsing_update(job_id, gid, opts={})
+        body = {}
+        body[:outputs] = opts.fetch(:outputs)
+        body[:pages] = opts.fetch(:pages)
+        body[:parsing_failed] = opts.fetch(:parsing_failed){ false }
+        
+        @options.merge!({body: body.to_json})
+
+        self.class.put("/jobs/#{job_id}/pages/#{gid}/parsing_update", @options)
+      end
     end
   end
 end

@@ -19,7 +19,23 @@ module AnswersEngine
       option :job, :aliases => :j
       def try_parse(parser_file, gid)
         job_id = options[:job]
-        puts AnswersEngine::Scraper::Parser.try_parser_page(parser_file, gid, job_id)
+        puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, false)
+      end
+
+      desc "exec <job_id> <parser_file> <GID>", "Executes a parser script on a Job Page"
+      long_desc <<-LONGDESC
+            Takes a parser script executes it against a job page and save the output to the job\n
+            
+            <job_id>: Global ID of the page.\x5
+            <parser_file>: Which parser script file will be executed on the page.\x5
+            
+            <GID>: Global ID of the page.\x5
+            
+            Example Usage: \x5
+            answersengine parser exec 123 index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\n
+          LONGDESC
+      def exec_parse(job_id, parser_file, gid)
+        puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, true)
       end
     end
   end

@@ -5,7 +5,7 @@ module AnswersEngine
       attr_accessor :filename, :gid, :job_id
 
 
-      def try_parser
+      def exec_parser(save=false)
         raise "should be implemented in subclass"
       end
 
@@ -29,6 +29,14 @@ module AnswersEngine
           job_page
         end
         
+      end
+
+      def parsing_update(options={})
+        client = Client::JobPage.new()
+        job_id = options.fetch(:job_id)
+        gid = options.fetch(:gid)
+
+        client.parsing_update(job_id, gid, options)
       end
 
       def init_global_page()
