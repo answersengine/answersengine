@@ -14,10 +14,11 @@ module AnswersEngine
         puts "#{client.all(job_id)}"
       end
 
-      desc "add <job_id> <method> <url>", "Enqueues a page to the job"
+      desc "add <job_id> <url>", "Enqueues a page to the job"
       long_desc <<-LONGDESC
           Enqueues a page to a job\x5
 
+          With --method or -m option to set method. Default: GET \x5
           With --page-type or -t option to set page_type \x5
           With --body or -b option to set body \x5
           With --headers or -H option to set headers. Must be in json format. i.e: {"Foo":"bar"} \x5
@@ -29,6 +30,7 @@ module AnswersEngine
           
           With --force-fetch or -f option to set true or false, defaults to false .
           LONGDESC
+      option :method, :aliases => :m, type: :string
       option :headers, :aliases => :H, type: :string
       option :page_type, :aliases => :t
       option :body, :aliases => :b
@@ -36,10 +38,10 @@ module AnswersEngine
       option :freshness, :aliases => :s
       option :ua_type, :aliases => :u
       option :no_redirect, :aliases => :n, type: :boolean
-      def add(job_id, method, url)
+      def add(job_id, url)
         begin
           options[:headers] = JSON.parse(options[:headers]) if options[:headers]
-          
+          method = options[:method]
           client = Client::JobPage.new(options)
           puts "#{client.enqueue(job_id, method, url, options)}"
         rescue JSON::ParserError
