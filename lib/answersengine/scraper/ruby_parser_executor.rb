@@ -68,13 +68,22 @@ module AnswersEngine
       end
 
       def handle_error(e)
-        error = ["Parsing #{e.class}: #{e.to_s} (Job:#{job_id} GID:#{gid})",e.backtrace].join("\n")
+        error = ["Parsing #{e.class}: #{e.to_s} (Job:#{job_id} GID:#{gid})",clean_backtrace(e.backtrace)].join("\n")
         
         parsing_update(
           job_id: job_id, 
           gid: gid, 
           parsing_failed: true, 
           log_error: error)
+      end
+
+      def clean_backtrace(backtrace)
+        i = backtrace.index{|x| x =~ /gems\/answersengine/i}
+        if i.to_i < 1
+          return []
+        else
+          return backtrace[0..(i-1)]
+        end
       end
     end
   end
