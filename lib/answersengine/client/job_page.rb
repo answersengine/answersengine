@@ -37,8 +37,8 @@ module AnswersEngine
 
       def parsing_update(job_id, gid, opts={})
         body = {}
-        body[:outputs] = opts.fetch(:outputs)
-        body[:pages] = opts.fetch(:pages)
+        body[:outputs] = opts.fetch(:outputs) {[]}
+        body[:pages] = opts.fetch(:pages) {[]}
         body[:parsing_failed] = opts.fetch(:parsing_failed){ false }
         
         @options.merge!({body: body.to_json})
