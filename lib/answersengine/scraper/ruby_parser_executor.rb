@@ -68,8 +68,7 @@ module AnswersEngine
       end
 
       def handle_error(e)
-        error_message = "Parsing failed for Job ID: #{job_id}, GID: #{gid}"
-        error = [error_message, "#{e.class}: #{e.to_s}",e.backtrace].join("\n")
+        error = ["Parsing #{e.class}: #{e.to_s} (Job:#{job_id} GID:#{gid})",e.backtrace].join("\n")
         
         parsing_update(
           job_id: job_id, 
