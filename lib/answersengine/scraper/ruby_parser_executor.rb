@@ -28,9 +28,11 @@ module AnswersEngine
           begin
 
             eval(File.read(filename), binding, filename)
-
+          rescue SyntaxError => e
+            handle_error(e)
+            raise e
           rescue => e
-            parsing_update(job_id: job_id, gid: gid, parsing_failed: true)
+            handle_error(e)
             raise e
           end
 
@@ -63,6 +65,17 @@ module AnswersEngine
           end
         end
         proc.call
+      end
+
+      def handle_error(e)
+        error_message = "Parsing failed for Job ID: #{job_id}, GID: #{gid}"
+        error = [error_message, "#{e.class}: #{e.to_s}",e.backtrace].join("\n")
+        
+        parsing_update(
+          job_id: job_id, 
+          gid: gid, 
+          parsing_failed: true, 
+          log_error: error)
       end
     end
   end
