@@ -29,10 +29,10 @@ module AnswersEngine
 
             eval(File.read(filename), binding, filename)
           rescue SyntaxError => e
-            handle_error(e)
+            handle_error(e) if save 
             raise e
           rescue => e
-            handle_error(e)
+            handle_error(e) if save
             raise e
           end
 
