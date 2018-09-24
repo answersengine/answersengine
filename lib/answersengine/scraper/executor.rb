@@ -39,6 +39,13 @@ module AnswersEngine
         client.parsing_update(job_id, gid, options)
       end
 
+      def job_seeding_update(options={})
+        client = Client::Job.new()
+        job_id = options.fetch(:job_id)
+
+        client.seeding_update(job_id, options)
+      end
+
       def init_global_page()
         client = Client::GlobalPage.new()
         client.find(gid)
@@ -53,6 +60,15 @@ module AnswersEngine
           Client::GCSContent.new.get_content(signed_url)
         else
           nil
+        end
+      end
+
+      def clean_backtrace(backtrace)
+        i = backtrace.index{|x| x =~ /gems\/answersengine/i}
+        if i.to_i < 1
+          return []
+        else
+          return backtrace[0..(i-1)]
         end
       end
     end

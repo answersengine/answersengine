@@ -77,14 +77,6 @@ module AnswersEngine
           log_error: error)
       end
 
-      def clean_backtrace(backtrace)
-        i = backtrace.index{|x| x =~ /gems\/answersengine/i}
-        if i.to_i < 1
-          return []
-        else
-          return backtrace[0..(i-1)]
-        end
-      end
     end
   end
 end

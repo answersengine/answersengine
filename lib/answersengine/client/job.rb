@@ -29,6 +29,17 @@ module AnswersEngine
         update(job_id, opts)
       end
 
+      def seeding_update(job_id, gid, opts={})
+        body = {}
+        
+        body[:pages] = opts.fetch(:pages) {[]}
+        body[:seeding_failed] = opts.fetch(:parsing_failed){ false }
+        body[:log_error] = opts[:log_error] if opts[:log_error]
+        
+        @options.merge!({body: body.to_json})
+
+        self.class.put("/jobs/#{job_id}/seeding_update", @options)
+      end
 
     end
 

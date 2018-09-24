@@ -1,0 +1,1 @@
+raise "fail from seeder"
