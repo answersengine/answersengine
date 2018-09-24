@@ -49,7 +49,8 @@ module AnswersEngine
           end
 
           unless more_token == ""
-            puts "to see more entries, add: \"--more #{more_token}\""
+            puts "-----------"
+            puts "To see more entries, add: \"--more #{more_token}\""
           end
         end
       end
