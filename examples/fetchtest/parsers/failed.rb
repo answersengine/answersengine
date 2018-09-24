@@ -1,2 +1,2 @@
-# raise "parsing intentionally failed"
-1 = 1
+raise "parsing intentionally failed"
+# 1 = 1
