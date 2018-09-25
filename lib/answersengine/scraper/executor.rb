@@ -39,10 +39,10 @@ module AnswersEngine
         client.parsing_update(job_id, gid, options)
       end
 
-      def job_seeding_update(options={})
+      def seeding_update(options={})
         client = Client::Job.new()
         job_id = options.fetch(:job_id)
-
+        
         client.seeding_update(job_id, options)
       end
 

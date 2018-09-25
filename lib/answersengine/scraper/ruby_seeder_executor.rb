@@ -27,6 +27,22 @@ module AnswersEngine
           begin
 
             eval(File.read(filename), binding, filename)
+
+            
+            
+            if save
+              save_pages(pages, true)
+            end
+
+            puts "=========== Seeding Script Executed ==========="
+
+            unless pages.empty?
+              puts "----------- New Pages to Enqueue: -----------"
+              puts JSON.pretty_generate(pages)
+              
+            end
+
+
           rescue SyntaxError => e
             handle_error(e) if save 
             raise e
@@ -34,22 +50,11 @@ module AnswersEngine
             handle_error(e) if save
             raise e
           end
-
-          puts "=========== Seeding Executed ==========="
-
-          
-          save_pages(pages, true)
-
-          unless pages.empty?
-            puts "----------- New Pages to Enqueue: -----------"
-            puts JSON.pretty_generate(pages)
-            
-          end
         end
         proc.call
       end
 
-      def save_pages(pages=[], done_seeding = false)
+      def save_pages(pages=[], seeding_done = false)
         if save
           total_pages = pages.count
           pages_per_slice = 100
@@ -58,17 +63,17 @@ module AnswersEngine
             log_msg = "Seeding #{pages_slice.count} out of #{total_pages} Pages"
             puts "log_info: #{log_msg}"
             
-            response = job_seeding_update(
+            response = seeding_update(
               job_id: job_id, 
-              pages: pages_slice, 
-              log_info: log_msg, 
-              done_seeding: done_seeding) 
+              pages: pages_slice,  
+              seeding_done: seeding_done) 
 
             if response.code == 200
-              puts "Job Seed Status Updated."
+              puts "Job Seed Updated."
+              puts "Seeding done." if seeding_done
             else
               puts "Error: Unable to save to server: #{response.body}"
-              break
+              raise "Unable to save to server: #{response.body}"
             end
           end
         end
@@ -77,9 +82,9 @@ module AnswersEngine
       def handle_error(e)
         error = ["Seeding #{e.class}: #{e.to_s} (Job:#{job_id}",clean_backtrace(e.backtrace)].join("\n")
         
-        job_seeding_update(
+        seeding_update(
           job_id: job_id, 
-          parsing_failed: true, 
+          seeding_failed: true, 
           log_error: error)
       end
 

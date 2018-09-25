@@ -5,6 +5,10 @@ module AnswersEngine
         self.class.get("/jobs", @options)
       end
 
+      def find(job_id)
+        self.class.get("/jobs/#{job_id}", @options)
+      end
+
       def update(job_id, opts={})
         body = {}
 
@@ -29,11 +33,11 @@ module AnswersEngine
         update(job_id, opts)
       end
 
-      def seeding_update(job_id, gid, opts={})
+      def seeding_update(job_id, opts={})
         body = {}
-        
         body[:pages] = opts.fetch(:pages) {[]}
-        body[:seeding_failed] = opts.fetch(:parsing_failed){ false }
+        body[:seeding_failed] = opts.fetch(:seeding_failed){ false }
+        body[:seeding_done] = opts.fetch(:seeding_done){ false }
         body[:log_error] = opts[:log_error] if opts[:log_error]
         
         @options.merge!({body: body.to_json})
