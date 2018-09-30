@@ -4,7 +4,7 @@ module AnswersEngine
   module Client
     class Base
       include HTTParty    
-      base_uri 'localhost:8080/api/v1'  
+      base_uri(ENV['ANSWERSENGINE_API_URL'].nil? ? 'https://fetch.answersengine.com/api/v1' : ENV['ANSWERSENGINE_API_URL'])
       AUTH_TOKEN = ENV['ANSWERSENGINE_TOKEN']
 
       def initialize(opts={})
