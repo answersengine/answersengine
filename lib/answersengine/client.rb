@@ -6,6 +6,7 @@ require "answersengine/client/job"
 require "answersengine/client/job_log"
 require "answersengine/client/global_page"
 require "answersengine/client/job_page"
+require "answersengine/client/job_output"
 require "answersengine/client/gcs_content"
 
 

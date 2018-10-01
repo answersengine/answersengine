@@ -3,6 +3,7 @@ require 'answersengine/scraper'
 require 'answersengine/cli/scraper_job'
 require 'answersengine/cli/global_page'
 require 'answersengine/cli/page'
+require 'answersengine/cli/job_output'
 require 'answersengine/cli/job'
 require 'answersengine/cli/scraper_deployment'
 require 'answersengine/cli/scraper'
@@ -29,6 +30,5 @@ module AnswersEngine
 
     desc "seeder SUBCOMMAND ...ARGS", "for seeding related activities"
     subcommand "seeder", Seeder
-
   end
 end

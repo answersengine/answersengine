@@ -64,6 +64,9 @@ module AnswersEngine
         end
       end
 
+      desc "job output SUBCOMMAND ...ARGS", "view job outputs"
+      subcommand "output", JobOutput
+
     end
   end
 
