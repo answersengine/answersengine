@@ -1,3 +1,4 @@
+require 'zlib'
 require 'httparty'
 
 module AnswersEngine
@@ -7,6 +8,10 @@ module AnswersEngine
       
       def get_content(url)
         self.class.get(url)
+      end
+
+      def get_gunzipped_content(url)
+        Zlib.gunzip(get_content(url))
       end
     end
   end
