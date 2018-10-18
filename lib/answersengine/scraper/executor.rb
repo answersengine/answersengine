@@ -57,7 +57,7 @@ module AnswersEngine
 
         if content_json['available']
           signed_url = content_json['signed_url']
-          Client::GCSContent.new.get_gunzipped_content(signed_url)
+          Client::BackblazeContent.new.get_gunzipped_content(signed_url)
         else
           nil
         end

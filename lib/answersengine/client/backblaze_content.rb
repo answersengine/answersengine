@@ -3,7 +3,7 @@ require 'httparty'
 
 module AnswersEngine
   module Client
-    class GCSContent
+    class BackblazeContent
       include HTTParty    
       
       def get_content(url)
