@@ -22,7 +22,7 @@ module AnswersEngine
         puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, false)
       end
 
-      desc "exec <job_id> <parser_file> <GID>", "Executes a parser script on a Job Page"
+      desc "exec <job_id> <parser_file> <GID>...<GID>", "Executes a parser script on or more Job Pages"
       long_desc <<-LONGDESC
             Takes a parser script executes it against a job page and save the output to the job\n
             
@@ -33,9 +33,17 @@ module AnswersEngine
             
             Example Usage: \x5
             answersengine parser exec 123 index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\n
+            answersengine parser exec 123 index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364 www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\n
           LONGDESC
-      def exec_parse(job_id, parser_file, gid)
-        puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, true)
+      def exec_parse(job_id, parser_file, *gids)
+        gids.each do |gid|
+          begin
+            puts "Parsing #{gid}"
+            puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, true)
+          rescue => e
+            puts e
+          end
+        end
       end
     end
   end
