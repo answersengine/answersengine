@@ -22,13 +22,11 @@ module AnswersEngine
           With --page-type or -t option to set page_type \x5
           With --body or -b option to set body \x5
           With --headers or -H option to set headers. Must be in json format. i.e: {"Foo":"bar"} \x5
-          With --force-fetch or -d option to set forcefetch to true or false \x5
+          With --force-fetch or -f option to set forcefetch to true or false \x5
           With --freshness or -s option to set freshness \x5
           With --ua-type or -u option to set user agent type: mobile or desktop \x5
           With --no-redirect or -n option to set noredirect to true or false\x5
           
-          
-          With --force-fetch or -f option to set true or false, defaults to false .
           LONGDESC
       option :method, :aliases => :m, type: :string
       option :headers, :aliases => :H, type: :string
