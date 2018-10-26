@@ -14,8 +14,8 @@ module AnswersEngine
         result = JSON.parse(client.find_content(gid).to_s)
         
         if result['available'] == true
-          puts "Content url: \"#{result['signed_url']}\""
-          `open "#{result['signed_url']}"`
+          puts "Preview content url: \"#{result['preview_url']}\""
+          `open "#{result['preview_url']}"`
         else
           puts "Content does not exist"
         end        
@@ -27,8 +27,8 @@ module AnswersEngine
         result = JSON.parse(client.find_failed_content(gid).to_s)
         
         if result['available'] == true
-          puts "Failed Content url: \"#{result['signed_url']}\""
-          `open "#{result['signed_url']}"`
+          puts "Preview failed content url: \"#{result['preview_url']}\""
+          `open "#{result['preview_url']}"`
         else
           puts "Failed Content does not exist"
         end        
