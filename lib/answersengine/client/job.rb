@@ -11,8 +11,8 @@ module AnswersEngine
 
       def update(job_id, opts={})
         body = {}
-
         body[:status] = opts[:status] if opts[:status]
+        body[:worker_count] = opts[:workers] if opts[:workers]
         @options.merge!({body: body.to_json})
 
         self.class.put("/jobs/#{job_id}", @options)

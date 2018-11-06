@@ -49,6 +49,18 @@ module AnswersEngine
         client = Client::Job.new(options)
         puts "#{client.pause(job_id)}"
       end
+
+
+      desc "update <job_id>", "updates a job"
+      long_desc <<-LONGDESC
+        Updates a job. You must cancel(or stop or pause) the job and then resume it, in order for it to take effect.\x5
+          With --workers or -w option to set how many workers to use. Defaults to 1.
+      LONGDESC
+      option :workers, :aliases => :w, type: :numeric
+      def update(job_id)
+        client = Client::Job.new(options)
+        puts "#{client.update(job_id, options)}"
+      end
       
     end
   end
