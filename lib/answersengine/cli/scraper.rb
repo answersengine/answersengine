@@ -36,11 +36,13 @@ module AnswersEngine
           Creates a scraper\x5
           With --branch or -b option to set the branch. Defaults to master.\x5
           With --freshness-type or -t option to set day|week|month|year|any. Defaults to any\x5
-          With --force-fetch or -f option to set true or false, defaults to false .
+          With --force-fetch or -f option to set true or false, defaults to false .\x5
+          With --workers or -w option to set how many workers to use. Defaults to 1.
           LONGDESC
       option :branch, :aliases => :b
       option :freshness_type, :aliases => :t
       option :force_fetch, :aliases => :f, type: :boolean
+      option :workers, :aliases => :w, type: :numeric
       def create(name, git_repository)
         client = Client::Scraper.new(options)
         puts "#{client.create(name, git_repository, options)}"
@@ -53,13 +55,15 @@ module AnswersEngine
           With --branch or -b option to set the branch name.\x5
           With --repo or -r option to set the git repo.\x5
           With --freshness-type or -t option to set day|week|month|year|any. Defaults to any \x5
-          With --force-fetch or -f option to set true or false, defaults to false .
+          With --force-fetch or -f option to set true or false, defaults to false . \x5
+          With --workers or -w option to set how many workers to use. Defaults to 1.
           LONGDESC
       option :branch, :aliases => :b
       option :name, :aliases => :n
       option :repo, :aliases => :r
       option :freshness_type, :aliases => :t
       option :force_fetch, :aliases => :f, type: :boolean
+      option :workers, :aliases => :w, type: :numeric
       def update(scraper_id)
         client = Client::Scraper.new(options)
         puts "#{client.update(scraper_id, options)}"
