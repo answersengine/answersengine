@@ -88,12 +88,14 @@ module AnswersEngine
 
       desc "start <scraper_id>", "Starts a scraper"
       long_desc <<-LONGDESC
-          Starts a scraper by crating an active scrape job
+          Starts a scraper by crating an active scrape job\x5
+          With --workers or -w option to set how many workers to use. Defaults to 1.
           LONGDESC
+      option :workers, :aliases => :w, type: :numeric
       def start(scraper_id)
-        client = Client::ScraperJob.new()
+        client = Client::ScraperJob.new(options)
         puts "Starting a scrape job..."
-        puts "#{client.create(scraper_id)}"
+        puts "#{client.create(scraper_id, options)}"
       end
 
 

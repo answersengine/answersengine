@@ -6,7 +6,9 @@ module AnswersEngine
       end
 
       def create(scraper_id, opts={})
-        @options.merge!({body:{}.to_json})
+        body = {}
+        body[:worker_count] = opts[:workers] if opts[:workers]
+        @options.merge!({body: body.to_json})
         self.class.post("/scrapers/#{scraper_id}/jobs", @options)
       end
     end
