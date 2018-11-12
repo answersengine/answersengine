@@ -26,10 +26,12 @@ module AnswersEngine
           With --freshness or -s option to set freshness \x5
           With --ua-type or -u option to set user agent type: mobile or desktop \x5
           With --no-redirect or -n option to set noredirect to true or false\x5
+          With --vars or -v option to set page vars. Must be in json format. i.e: {"Foo":"bar"} \x5
           
           LONGDESC
       option :method, :aliases => :m, type: :string
       option :headers, :aliases => :H, type: :string
+      option :vars, :aliases => :v, type: :string
       option :page_type, :aliases => :t
       option :body, :aliases => :b
       option :force_fetch, :aliases => :f, type: :boolean
@@ -39,11 +41,17 @@ module AnswersEngine
       def add(job_id, url)
         begin
           options[:headers] = JSON.parse(options[:headers]) if options[:headers]
+          options[:vars] = JSON.parse(options[:vars]) if options[:vars]
           method = options[:method]
           client = Client::JobPage.new(options)
           puts "#{client.enqueue(job_id, method, url, options)}"
         rescue JSON::ParserError
-          puts "Error: #{options[:headers]} is not a valid JSON"
+          if options[:headers]
+            puts "Error: #{options[:headers]} on headers is not a valid JSON"
+          end
+          if options[:vars]
+            puts "Error: #{options[:vars]} on vars is not a valid JSON"
+          end
         end
       end
 
@@ -51,13 +59,22 @@ module AnswersEngine
       desc "update <job_id> <gid>", "Update a page in a job"
       long_desc <<-LONGDESC
           Updates a page in a job. Only page_type is updateable
-          With --page-type or -t option to set the page type.
+          With --page-type or -t option to set the page type\x5
+          With --vars or -v option to set page vars. Must be in json format. i.e: {"Foo":"bar"} \x5
           
           LONGDESC
       option :page_type, :aliases => :t
+      option :vars, :aliases => :v, type: :string
       def update(job_id, gid)
-        client = Client::JobPage.new(options)
-        puts "#{client.update(job_id, gid, options)}"
+        begin
+          options[:vars] = JSON.parse(options[:vars]) if options[:vars]
+          client = Client::JobPage.new(options)
+          puts "#{client.update(job_id, gid, options)}"
+        rescue JSON::ParserError
+          if options[:vars]
+            puts "Error: #{options[:vars]} on vars is not a valid JSON"
+          end
+        end
       end
 
       desc "show <job_id> <gid>", "Show a page in job"

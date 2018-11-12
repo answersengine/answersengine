@@ -6,6 +6,7 @@ module AnswersEngine
         @filename = options.fetch(:filename) { raise "Filename is required"}
         @gid = options.fetch(:gid) { raise "GID is required"}
         @job_id = options.fetch(:job_id)
+        @page_vars = options.fetch(:vars) { {} }
       end
 
       def exec_parser(save=false)
@@ -18,12 +19,21 @@ module AnswersEngine
         eval_parser_script(save)
       end
 
+      def init_page_vars(page) 
+        vars = page["vars"]
+        if !@page_vars.empty? 
+          vars = @page_vars
+        end
+        vars
+      end
+
       def eval_parser_script(save=false)
         proc = Proc.new do
           page = init_page
           outputs = []
           pages = []
           content = get_content(gid)
+          vars = init_page_vars(page)
 
           begin
 

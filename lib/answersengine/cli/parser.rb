@@ -10,16 +10,26 @@ module AnswersEngine
             
             <GID>: Global ID of the page.\x5
             
-            With --job or -j option to set job_id to run this against a job page\n
+            With --job or -j option to set job_id to run this against a job page\x5
+            With --vars or -v option to set page vars. Must be in json format. i.e: {"Foo":"bar"} \n
             
             Example Usage: \x5
             answersengine parser try index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\x5
             answersengine parser try index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364 --job 123\n
           LONGDESC
       option :job, :aliases => :j
+      option :vars, :aliases => :v, type: :string
       def try_parse(parser_file, gid)
-        job_id = options[:job]
-        puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, false)
+        begin 
+          job_id = options[:job]
+          vars = JSON.parse(options[:vars]) if options[:vars]
+          puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, false, vars)
+
+          rescue JSON::ParserError
+          if options[:vars]
+            puts "Error: #{options[:vars]} on vars is not a valid JSON"
+          end
+        end
       end
 
       desc "exec <job_id> <parser_file> <GID>...<GID>", "Executes a parser script on or more Job Pages"
