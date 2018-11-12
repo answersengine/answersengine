@@ -98,10 +98,10 @@ module AnswersEngine
         puts "#{client.create(scraper_id, options)}"
       end
 
-      desc "scraper job SUBCOMMAND ...ARGS", "manage scrapers jobs"
+      desc "job SUBCOMMAND ...ARGS", "manage scrapers jobs"
       subcommand "job", ScraperJob
 
-      desc "scraper deployment SUBCOMMAND ...ARGS", "manage scrapers deployments"
+      desc "deployment SUBCOMMAND ...ARGS", "manage scrapers deployments"
       subcommand "deployment", ScraperDeployment
     end
   end
