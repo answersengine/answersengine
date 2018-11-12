@@ -21,7 +21,7 @@ module AnswersEngine
 
       def init_page_vars(page) 
         vars = page["vars"]
-        if !@page_vars.empty? 
+        if !@page_vars.nil? && !@page_vars.empty? 
           vars = @page_vars
         end
         vars
