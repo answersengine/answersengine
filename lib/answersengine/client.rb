@@ -7,6 +7,7 @@ require "answersengine/client/job_log"
 require "answersengine/client/global_page"
 require "answersengine/client/job_page"
 require "answersengine/client/job_output"
+require "answersengine/client/job_stat"
 require "answersengine/client/backblaze_content"
 
 

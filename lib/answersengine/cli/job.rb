@@ -64,7 +64,18 @@ module AnswersEngine
         end
       end
 
-      desc "job output SUBCOMMAND ...ARGS", "view job outputs"
+      desc "stats <job_id>", "Get the current stat for a job"
+      long_desc <<-LONGDESC
+        Get current stat for a job\n
+
+        <job_id>: The job ID.\x5
+      LONGDESC
+      def stats(job_id)
+        client = Client::JobStat.new(options)
+        puts "#{client.current(job_id)}"
+      end
+
+      desc "output SUBCOMMAND ...ARGS", "view job outputs"
       subcommand "output", JobOutput
 
     end
