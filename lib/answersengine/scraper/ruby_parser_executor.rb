@@ -20,11 +20,10 @@ module AnswersEngine
       end
 
       def init_page_vars(page) 
-        vars = page["vars"]
         if !@page_vars.nil? && !@page_vars.empty? 
-          vars = @page_vars
+          page['vars'] = @page_vars
         end
-        vars
+        page
       end
 
       def eval_parser_script(save=false)
@@ -33,7 +32,7 @@ module AnswersEngine
           outputs = []
           pages = []
           content = get_content(gid)
-          vars = init_page_vars(page)
+          page = init_page_vars(page)
 
           begin
 

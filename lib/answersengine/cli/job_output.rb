@@ -2,54 +2,62 @@ module AnswersEngine
   class CLI < Thor
     class JobOutput < Thor
 
-      package_name "job output"
+      package_name "scraper output"
       def self.banner(command, namespace = nil, subcommand = false)
         "#{basename} #{@package_name} #{command.usage}"
       end
 
-      desc "list <job_id>", "List all output records in a collection"
-      option :page, :aliases => :p
-      option :collection, :aliases => :c
+      desc "list <scraper_name>", "List output records in a collection that is in the current job"
       long_desc <<-LONGDESC
-        List all output records in a collection\n
-
-        <job_id>: The job ID.\x5
-
-        With --collection or -c option to query against a collection.(defaults to 'default' collection)\x5
-        With --page or -p option to get the next set of records by page.
+        List all output records in a collection that is in the current job of a scraper\n
       LONGDESC
-      def list(job_id)
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
+      option :collection, :aliases => :c, desc: "Shows outputs from a specific collection.(defaults to 'default' collection)"
+      def list(scraper_name)
         collection = options.fetch(:collection) { 'default' }
-        client = Client::JobOutput.new(options)
-        puts "#{client.all(job_id, collection)}"
+        if options[:job]
+          client = Client::JobOutput.new(options)
+          puts "#{client.all(options[:job], collection)}"
+        else
+          client = Client::ScraperJobOutput.new(options)
+          puts "#{client.all(scraper_name, collection)}"
+        end
       end
 
-      desc "show <job_id> <id>", "Show an output record in a collection"
+      desc "show <scraper_name> <record_id>", "Show one output record in a collection that is in the current job of a scraper"
       long_desc <<-LONGDESC
-        Shows an output record in a collection\n
-
-        <job_id>: The job ID.\x5
-        <collection>: The name of the collection.\x5
-        <id>: ID of the output record.\x5
-        With --collection or -c option to query against a collection.(defaults to 'default' collection)\x5
+        Shows an output record in a collection that is in the current job of a scraper\n
+        <record_id>: ID of the output record.\x5
       LONGDESC
-      option :collection, :aliases => :c
-      def show(job_id, id)
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      option :collection, :aliases => :c, desc: "Shows output from a specific collection.(defaults to 'default' collection)"
+      def show(scraper_name, id)
         collection = options.fetch(:collection) { 'default' }
-        client = Client::JobOutput.new(options)
-        puts "#{client.find(job_id, collection, id)}"
+        if options[:job]
+          client = Client::JobOutput.new(options)
+          puts "#{client.find(options[:job], collection, id)}"
+        else
+          client = Client::ScraperJobOutput.new(options)
+          puts "#{client.find(scraper_name, collection, id)}"
+        end
       end
 
-      desc "collections <job_id>", "list job output's collections"
+      desc "collections <scraper_name>", "list job output collections that are inside a current job of a scraper."
       long_desc <<-LONGDESC
-        List all collections that are created in a job.
-   
-        With --page or -p option to get the next set of records by page.
+        List job output collections that are inside a current job of a scraper.\x5
       LONGDESC
-      option :page, :aliases => :p
-      def collections(job_id)
-        client = Client::JobOutput.new(options)
-        puts "#{client.collections(job_id)}"
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
+      def collections(scraper_name)
+
+        if options[:job]
+          client = Client::JobOutput.new(options)
+          puts "#{client.collections(options[:job])}"
+        else
+          client = Client::ScraperJobOutput.new(options)
+          puts "#{client.collections(scraper_name)}"
+        end
       end
 
     end

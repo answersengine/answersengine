@@ -2,7 +2,7 @@ require 'thor'
 require 'answersengine/scraper'
 require 'answersengine/cli/scraper_job'
 require 'answersengine/cli/global_page'
-require 'answersengine/cli/page'
+require 'answersengine/cli/scraper_page'
 require 'answersengine/cli/job_output'
 require 'answersengine/cli/job'
 require 'answersengine/cli/scraper_deployment'
@@ -18,9 +18,6 @@ module AnswersEngine
 
     desc "job SUBCOMMAND ...ARGS", "manage scrapers jobs"
     subcommand "job", Job
-
-    desc "page SUBCOMMAND ...ARGS", "manage pages on a job"
-    subcommand "page", Page
 
     desc "globalpage SUBCOMMAND ...ARGS", "interacts with global page"
     subcommand "globalpage", GlobalPage

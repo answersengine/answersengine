@@ -9,12 +9,10 @@ module AnswersEngine
 
       
       desc "list <scraper_name>", "List deployments on a scraper"
-      option :page, :aliases => :p
       long_desc <<-LONGDESC
         List deployments on a scraper.
-   
-        With --page or -p option to get the next set of records by page.
       LONGDESC
+      option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
       def list(scraper_name)
         client = Client::ScraperDeployment.new(options)
         puts "#{client.all(scraper_name)}"

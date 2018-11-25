@@ -3,22 +3,12 @@ module AnswersEngine
     class Parser < Thor
       desc "try <parser_file> <GID>", "Tries a parser on a Global Page or Job Page"
       long_desc <<-LONGDESC
-            Takes a parser script and runs it against a global page or a job page\n
-            
-            
-            <parser_file>: Which parser script file will be executed on the page.\n
-            
+            Takes a parser script and runs it against a global page or a job page\x5
+            <parser_file>: Parser script file that will be executed on the page.\x5
             <GID>: Global ID of the page.\x5
-            
-            With --job or -j option to set job_id to run this against a job page\x5
-            With --vars or -v option to set page vars. Must be in json format. i.e: {"Foo":"bar"} \n
-            
-            Example Usage: \x5
-            answersengine parser try index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\x5
-            answersengine parser try index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364 --job 123\n
           LONGDESC
-      option :job, :aliases => :j
-      option :vars, :aliases => :v, type: :string
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      option :vars, :aliases => :v, type: :string, desc: 'Set user-defined page variables. Must be in json format. i.e: {"Foo":"bar"}'
       def try_parse(parser_file, gid)
         begin 
           job_id = options[:job]
@@ -32,23 +22,25 @@ module AnswersEngine
         end
       end
 
-      desc "exec <job_id> <parser_file> <GID>...<GID>", "Executes a parser script on or more Job Pages"
+      desc "exec <scraper_name> <parser_file> <GID>...<GID>", "Executes a parser script on one or more Job Pages within a scraper's current job"
       long_desc <<-LONGDESC
-            Takes a parser script executes it against a job page and save the output to the job\n
-            
-            <job_id>: Global ID of the page.\x5
-            <parser_file>: Which parser script file will be executed on the page.\x5
-            
+            Takes a parser script executes it against a job page(s) and save the output to the scraper's current job\x5
+            <parser_file>: Parser script file will be executed on the page.\x5
             <GID>: Global ID of the page.\x5
-            
-            Example Usage: \x5
-            answersengine parser exec 123 index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\n
-            answersengine parser exec 123 index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364 www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\n
           LONGDESC
-      def exec_parse(job_id, parser_file, *gids)
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      def exec_parse(scraper_name, parser_file, *gids)
         gids.each do |gid|
           begin
             puts "Parsing #{gid}"
+
+            if options[:job]
+              job_id = options[:job]
+            else
+              client = Client::ScraperJob.new(options)
+              job_id = client.find(scraper_name)
+            end
+
             puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, true)
           rescue => e
             puts e

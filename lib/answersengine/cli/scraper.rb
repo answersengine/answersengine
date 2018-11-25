@@ -1,31 +1,12 @@
 module AnswersEngine
   class CLI < Thor
     class Scraper < Thor
-      desc "parse <parser_type> <parser_file> <GID>", "Executes a parser file on a page"
-      long_desc <<-LONGDESC
-            Takes a page and executes the parser file based on what parser type.\n
-            
-            <parser_type>: Determines what kind of parser will be executed. Available options: "ruby" or "config"\n
-            
-            <parser_file>: Which parser file will be executed on the page.\n
-            
-            <GID>: Global ID of the page.\n
-            
-            Example Usage: \n
-            answersengine scraper parse ruby index.rb www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364\n
-            answersengine scraper parse config index.json www.ebay.com-b3cc6226318ba6ba8e4a268341490fb35df24f141d95d9ebfccf8ffdd86ab364
-          LONGDESC
-      def parse(parser_type, parser_file, gid)
-        puts AnswersEngine::Scraper::Parser.parse(parser_type, parser_file, gid)
-      end
-
       desc "list", "List scrapers"
-      option :page, :aliases => :p
+      
       long_desc <<-LONGDESC
-        List scrapers.
-   
-        With --page or -p option to get the next set of records by page.
+        List all scrapers.
       LONGDESC
+      option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
       def list
         client = Client::Scraper.new(options)
         puts "#{client.all}"
@@ -34,15 +15,13 @@ module AnswersEngine
       desc "create <scraper_name> <git_repository>", "Create a scraper"
       long_desc <<-LONGDESC
           Creates a scraper\x5
-          With --branch or -b option to set the branch. Defaults to master.\x5
-          With --freshness-type or -t option to set day|week|month|year|any. Defaults to any\x5
-          With --force-fetch or -f option to set true or false, defaults to false .\x5
-          With --workers or -w option to set how many workers to use. Defaults to 1.
+          <scraper_name>: Scraper name must be alphanumeric and underscore only. Name must be unique to your account.\x5
+          <git_repository>: URL to a valid Git repository.\x5
           LONGDESC
-      option :branch, :aliases => :b
-      option :freshness_type, :aliases => :t
-      option :force_fetch, :aliases => :f, type: :boolean
-      option :workers, :aliases => :w, type: :numeric
+      option :branch, :aliases => :b, desc: 'Set the Git branch to use. Default: master'
+      option :freshness_type, :aliases => :t, desc: 'Set how fresh the page cache is. Possible values: day, week, month, year. Default: any'
+      option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
+      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
       def create(scraper_name, git_repository)
         client = Client::Scraper.new(options)
         puts "#{client.create(scraper_name, git_repository, options)}"
@@ -51,19 +30,13 @@ module AnswersEngine
       desc "update <scraper_name>", "Update a scraper"
       long_desc <<-LONGDESC
           Updates a scraper\x5
-          With --name or -n option to set the scraper name.\x5
-          With --branch or -b option to set the branch name.\x5
-          With --repo or -r option to set the git repo.\x5
-          With --freshness-type or -t option to set day|week|month|year|any. Defaults to any \x5
-          With --force-fetch or -f option to set true or false, defaults to false . \x5
-          With --workers or -w option to set how many workers to use. Defaults to 1.
           LONGDESC
-      option :branch, :aliases => :b
-      option :name, :aliases => :n
-      option :repo, :aliases => :r
-      option :freshness_type, :aliases => :t
-      option :force_fetch, :aliases => :f, type: :boolean
-      option :workers, :aliases => :w, type: :numeric
+      option :branch, :aliases => :b, desc: 'Set the Git branch to use. Default: master'
+      option :name, :aliases => :n, desc: 'Set the scraper name. Must be alphanumeric and undescore only. Name must be unique to your account'
+      option :repo, :aliases => :r, desc: 'Set the URL to a valid Git repository'
+      option :freshness_type, :aliases => :t, desc: 'Set how fresh the page cache is. Possible values: day, week, month, year. Default: any'
+      option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
+      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
       def update(scraper_name)
         client = Client::Scraper.new(options)
         puts "#{client.update(scraper_name, options)}"
@@ -86,23 +59,85 @@ module AnswersEngine
         puts "#{client.deploy(scraper_name)}"
       end
 
-      desc "start <scraper_name>", "Starts a scraper"
+      desc "start <scraper_name>", "Creates a scraping job and runs it"
       long_desc <<-LONGDESC
-          Starts a scraper by crating an active scrape job\x5
-          With --workers or -w option to set how many workers to use. Defaults to 1.
+          Starts a scraper by creating an active scrape job\x5
           LONGDESC
-      option :workers, :aliases => :w, type: :numeric
+      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
       def start(scraper_name)
         client = Client::ScraperJob.new(options)
         puts "Starting a scrape job..."
         puts "#{client.create(scraper_name, options)}"
       end
 
+
+      desc "log <scraper_name>", "List log entries related to a scraper's current job"
+      long_desc <<-LONGDESC
+          Shows log related to a scraper's current job. Defaults to showing the most recent entries\x5
+          LONGDESC
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      option :head, :aliases => :H, desc: 'Show the oldest log entries. If not set, newest entries is shown'
+      option :parsing, :aliases => :p, desc: 'Show only log entries related to parsing'
+      option :seeding, :aliases => :s, desc: 'Show only log entries related to seeding'
+      option :more, :aliases => :m, desc: 'Show next set of log entries. Enter the `More token`'
+      def log(scraper_name)
+        client = Client::JobLog.new(options)
+
+        query = {}
+        query["order"] = options.delete(:head) if options[:head]
+        query["job_type"] = options.delete(:parsing) if options[:parsing]
+        query["job_type"] = options.delete(:seeding) if options[:seeding]
+        query["page_token"] = options.delete(:more) if options[:more]
+
+        if options[:job]
+          result = client.all_job_log(options[:job], {query: query})
+        else
+          result = client.scraper_all_job_log(scraper_name, {query: query})
+        end
+
+        unless result["entries"].nil?
+
+          more_token = result["more_token"]
+
+          result["entries"].each do |entry|
+            puts "#{entry["timestamp"]} #{entry["severity"]}: #{entry["payload"]}" if entry.is_a?(Hash)
+          end
+
+          unless more_token == ""
+            puts "-----------"
+            puts "To see more entries, add: \"--more #{more_token}\""
+          end
+        end
+      end
+
+      desc "stats <scraper_name>", "Get the current stat for a job"
+      long_desc <<-LONGDESC
+        Get stats for a scraper's current job\n
+      LONGDESC
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      def stats(scraper_name)
+        client = Client::JobStat.new(options)
+        if options[:job]
+          puts "#{client.job_current_stats(options[:job])}"
+        else
+          puts "#{client.scraper_job_current_stats(scraper_name)}"
+        end
+
+      end
+
+
       desc "job SUBCOMMAND ...ARGS", "manage scrapers jobs"
       subcommand "job", ScraperJob
 
       desc "deployment SUBCOMMAND ...ARGS", "manage scrapers deployments"
       subcommand "deployment", ScraperDeployment
+
+      desc "output SUBCOMMAND ...ARGS", "view scraper outputs"
+      subcommand "output", JobOutput
+
+      desc "page SUBCOMMAND ...ARGS", "manage pages on a job"
+      subcommand "page", ScraperPage
+
     end
   end
 

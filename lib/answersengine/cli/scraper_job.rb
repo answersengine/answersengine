@@ -6,62 +6,62 @@ module AnswersEngine
         "#{basename} #{@package_name} #{command.usage}"
       end
 
+      desc "show <scraper_name>", "Show a scraper's current job"
+      def show(scraper_name)
+        client = Client::ScraperJob.new(options)
+        puts "#{client.find(scraper_name)}"
+      end
+
 
       desc "list <scraper_name>", "gets a list of jobs on a scraper"
-      option :page, :aliases => :p
       long_desc <<-LONGDESC
         List jobs on a scraper.
-   
-        With --page or -p option to get the next set of records by page.
       LONGDESC
+      option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
       def list(scraper_name)
         client = Client::ScraperJob.new(options)
         puts "#{client.all(scraper_name)}"
       end
 
 
-      desc "cancel <job_id>", "cancels a job"
-      option :page, :aliases => :p
+      desc "cancel <scraper_name>", "cancels a scraper's current job"
       long_desc <<-LONGDESC
-        Cancels a job
+        Cancels a scraper's current job
       LONGDESC
-      def cancel(job_id)
-        client = Client::Job.new(options)
-        puts "#{client.cancel(job_id)}"
+      def cancel(scraper_name)
+        client = Client::ScraperJob.new(options)
+        puts "#{client.cancel(scraper_name)}"
       end
 
-      desc "resume <job_id>", "resumes a job"
-      option :page, :aliases => :p
+      desc "resume <scraper_name>", "resumes a scraper's current job"
       long_desc <<-LONGDESC
-        Resumes a job
+        Resumes a scraper's current job
       LONGDESC
-      def resume(job_id)
-        client = Client::Job.new(options)
-        puts "#{client.resume(job_id)}"
+      def resume(scraper_name)
+        client = Client::ScraperJob.new(options)
+        puts "#{client.resume(scraper_name)}"
       end
 
-      desc "pause <job_id>", "pauses a job"
-      option :page, :aliases => :p
+      desc "pause <scraper_name>", "pauses a scraper's current job"
       long_desc <<-LONGDESC
-        pauses a job
+        pauses a scraper's current job
       LONGDESC
-      def pause(job_id)
-        client = Client::Job.new(options)
-        puts "#{client.pause(job_id)}"
+      def pause(scraper_name)
+        client = Client::ScraperJob.new(options)
+        puts "#{client.pause(scraper_name)}"
       end
 
 
-      desc "update <job_id>", "updates a job"
+      desc "update <scraper_name>", "updates a scraper's current job"
       long_desc <<-LONGDESC
-        Updates a job. You must cancel(or stop or pause) the job and then resume it, in order for it to take effect.\x5
-          With --workers or -w option to set how many workers to use. Defaults to 1.
+        Updates a scraper's current job.
       LONGDESC
-      option :workers, :aliases => :w, type: :numeric
-      def update(job_id)
-        client = Client::Job.new(options)
-        puts "#{client.update(job_id, options)}"
+      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Scraper job must be restarted(paused then resumed, or cancelled then resumed) for it to take effect. Default: 1. '
+      def update(scraper_name)
+        client = Client::ScraperJob.new(options)
+        puts "#{client.update(scraper_name, options)}"
       end
-      
+
     end
   end
 
