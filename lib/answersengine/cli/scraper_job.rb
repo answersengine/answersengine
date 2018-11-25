@@ -7,16 +7,16 @@ module AnswersEngine
       end
 
 
-      desc "list <scraper_id>", "gets a list of jobs on a scraper"
+      desc "list <scraper_name>", "gets a list of jobs on a scraper"
       option :page, :aliases => :p
       long_desc <<-LONGDESC
         List jobs on a scraper.
    
         With --page or -p option to get the next set of records by page.
       LONGDESC
-      def list(scraper_id)
+      def list(scraper_name)
         client = Client::ScraperJob.new(options)
-        puts "#{client.all(scraper_id)}"
+        puts "#{client.all(scraper_name)}"
       end
 
 

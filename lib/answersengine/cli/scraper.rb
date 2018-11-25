@@ -31,7 +31,7 @@ module AnswersEngine
         puts "#{client.all}"
       end
 
-      desc "create <name> <git_repository>", "Create a scraper"
+      desc "create <scraper_name> <git_repository>", "Create a scraper"
       long_desc <<-LONGDESC
           Creates a scraper\x5
           With --branch or -b option to set the branch. Defaults to master.\x5
@@ -43,12 +43,12 @@ module AnswersEngine
       option :freshness_type, :aliases => :t
       option :force_fetch, :aliases => :f, type: :boolean
       option :workers, :aliases => :w, type: :numeric
-      def create(name, git_repository)
+      def create(scraper_name, git_repository)
         client = Client::Scraper.new(options)
-        puts "#{client.create(name, git_repository, options)}"
+        puts "#{client.create(scraper_name, git_repository, options)}"
       end
 
-      desc "update <scraper_id>", "Update a scraper"
+      desc "update <scraper_name>", "Update a scraper"
       long_desc <<-LONGDESC
           Updates a scraper\x5
           With --name or -n option to set the scraper name.\x5
@@ -64,38 +64,38 @@ module AnswersEngine
       option :freshness_type, :aliases => :t
       option :force_fetch, :aliases => :f, type: :boolean
       option :workers, :aliases => :w, type: :numeric
-      def update(scraper_id)
+      def update(scraper_name)
         client = Client::Scraper.new(options)
-        puts "#{client.update(scraper_id, options)}"
+        puts "#{client.update(scraper_name, options)}"
       end
 
 
-      desc "show <scraper_id>", "Show a scraper"
-      def show(scraper_id)
+      desc "show <scraper_name>", "Show a scraper"
+      def show(scraper_name)
         client = Client::Scraper.new(options)
-        puts "#{client.find(scraper_id)}"
+        puts "#{client.find(scraper_name)}"
       end
 
-      desc "deploy <scraper_id>", "Deploy a scraper"
+      desc "deploy <scraper_name>", "Deploy a scraper"
       long_desc <<-LONGDESC
           Deploys a scraper
           LONGDESC
-      def deploy(scraper_id)
+      def deploy(scraper_name)
         client = Client::ScraperDeployment.new()
         puts "Deploying scraper. This may take a while..."
-        puts "#{client.deploy(scraper_id)}"
+        puts "#{client.deploy(scraper_name)}"
       end
 
-      desc "start <scraper_id>", "Starts a scraper"
+      desc "start <scraper_name>", "Starts a scraper"
       long_desc <<-LONGDESC
           Starts a scraper by crating an active scrape job\x5
           With --workers or -w option to set how many workers to use. Defaults to 1.
           LONGDESC
       option :workers, :aliases => :w, type: :numeric
-      def start(scraper_id)
+      def start(scraper_name)
         client = Client::ScraperJob.new(options)
         puts "Starting a scrape job..."
-        puts "#{client.create(scraper_id, options)}"
+        puts "#{client.create(scraper_name, options)}"
       end
 
       desc "job SUBCOMMAND ...ARGS", "manage scrapers jobs"

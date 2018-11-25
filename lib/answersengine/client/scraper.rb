@@ -2,17 +2,17 @@ module AnswersEngine
   module Client
     class Scraper < AnswersEngine::Client::Base
 
-      def find(scraper_id)
-        self.class.get("/scrapers/#{scraper_id}", @options)
+      def find(scraper_name)
+        self.class.get("/scrapers/#{scraper_name}", @options)
       end
 
       def all(opts={})
         self.class.get("/scrapers", @options)
       end
 
-      def create(name, git_repository, opts={})
+      def create(scraper_name, git_repository, opts={})
         body = {
-            name: name,
+            name: scraper_name,
             git_repository: git_repository,
             git_branch: opts[:branch] ? opts[:branch] : "master"}
 
@@ -24,7 +24,7 @@ module AnswersEngine
         self.class.post("/scrapers", @options)
       end
 
-      def update(scraper_id, opts={})
+      def update(scraper_name, opts={})
         body = {}
 
         body[:name] = opts[:name] if opts[:name]
@@ -35,7 +35,7 @@ module AnswersEngine
         body[:worker_count] = opts[:workers] if opts[:workers]
         @options.merge!({body: body.to_json})
 
-        self.class.put("/scrapers/#{scraper_id}", @options)
+        self.class.put("/scrapers/#{scraper_name}", @options)
       end
     end
   end
