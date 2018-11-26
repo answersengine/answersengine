@@ -7,7 +7,7 @@ module AnswersEngine
       end
 
       def scraper_job_current_stats(scraper_name)
-        self.class.get("/scrapers/#{scraper_name}/curretn_job/stats/current", @options)
+        self.class.get("/scrapers/#{scraper_name}/current_job/stats/current", @options)
       end
 
     end
