@@ -37,8 +37,8 @@ module AnswersEngine
             if options[:job]
               job_id = options[:job]
             else
-              client = Client::ScraperJob.new(options)
-              job_id = client.find(scraper_name)
+              job = Client::ScraperJob.new(options).find(scraper_name)
+              job_id = job['id']
             end
 
             puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, true)

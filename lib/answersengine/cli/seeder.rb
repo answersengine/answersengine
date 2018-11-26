@@ -20,8 +20,8 @@ module AnswersEngine
         if options[:job]
           job_id = options[:job]
         else
-          client = Client::ScraperJob.new(options)
-          job_id = client.find(scraper_name)
+          job = Client::ScraperJob.new(options).find(scraper_name)
+          job_id = job['id']
         end
 
         puts AnswersEngine::Scraper::Seeder.exec_seeder(seeder_file, job_id, true)
