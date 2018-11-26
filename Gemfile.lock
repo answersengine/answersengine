@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    answersengine (0.1.5)
+    answersengine (0.2.0)
       httparty (~> 0.16.2)
       nokogiri (~> 1.6, >= 1.6.8)
       thor
