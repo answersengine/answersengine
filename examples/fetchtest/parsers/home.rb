@@ -21,7 +21,7 @@ doc1 = {
     text: text,
     heading: heading,
     response_headers: page['response_headers'],
-    some_vars: vars
+    some_vars: page['vars']
     # url: page.url
 }
 doc2 = {
@@ -30,7 +30,7 @@ doc2 = {
     text: text,
     heading: heading,
     response_headers: page['response_headers'],
-    some_vars: vars
+    some_vars: page['vars']
     # url: page.url
 }
 
@@ -47,4 +47,4 @@ pages << {
 
 puts "inspect page: #{page}"
 
-puts "inspect vars: #{vars}"
+puts "inspect vars: #{page['vars']}"
