@@ -1,24 +1,27 @@
 module AnswersEngine
   class CLI < Thor
     class Parser < Thor
-      desc "try <parser_file> <GID>", "Tries a parser on a Global Page or Job Page"
+      desc "try <scraper_name> <parser_file> <GID>", "Tries a parser on a Job Page"
       long_desc <<-LONGDESC
-            Takes a parser script and runs it against a global page or a job page\x5
+            Takes a parser script and runs it against a job page\x5
             <parser_file>: Parser script file that will be executed on the page.\x5
             <GID>: Global ID of the page.\x5
           LONGDESC
       option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
-      option :scraper, :aliases => :s, desc: 'Set a specific scraper name'
+      option :global, :aliases => :g, type: :boolean, default: false, desc: 'Use globalpage instead of a job page'
       option :vars, :aliases => :v, type: :string, desc: 'Set user-defined page variables. Must be in json format. i.e: {"Foo":"bar"}'
-      def try_parse(parser_file, gid)
+      def try_parse(scraper_name, parser_file, gid)
         begin 
           
-          if options[:scraper]
-            job = Client::ScraperJob.new(options).find(options[:scraper])
-            job_id = job['id']
-          elsif options[:job]
-            job_id = options[:job]
-          end
+            if options[:job]
+              job_id = options[:job]
+            elsif options[:global] 
+              job_id = nil
+            else
+              job = Client::ScraperJob.new(options).find(scraper_name)
+              job_id = job['id']
+            end
+
 
           vars = JSON.parse(options[:vars]) if options[:vars]
           puts AnswersEngine::Scraper::Parser.exec_parser_page(parser_file, gid, job_id, false, vars)
