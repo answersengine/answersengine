@@ -88,6 +88,30 @@ module AnswersEngine
         end
       end 
 
+      desc "reset <scraper_name> <gid>", "Reset fetching and parsing of a page in a scraper's current job"
+      long_desc <<-LONGDESC
+          Reset fetching and parsing of a page in a scraper's current job.\x5
+          LONGDESC
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      def reset(scraper_name, gid)
+        begin
+          options[:vars] = JSON.parse(options[:vars]) if options[:vars]
+
+          if options[:job]
+            client = Client::JobPage.new(options)
+            puts "#{client.reset(options[:job], gid, options)}"
+          else
+            client = Client::ScraperJobPage.new(options)
+            puts "#{client.reset(scraper_name, gid, options)}"
+          end
+
+        rescue JSON::ParserError
+          if options[:vars]
+            puts "Error: #{options[:vars]} on vars is not a valid JSON"
+          end
+        end
+      end 
+
       desc "show <scraper_name> <gid>", "Show a page in scraper's current job"
       long_desc <<-LONGDESC
           Shows a page in a scraper's current job.\x5

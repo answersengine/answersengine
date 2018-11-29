@@ -19,6 +19,10 @@ module AnswersEngine
         self.class.put("/scrapers/#{scraper_name}/current_job/pages/#{gid}", @options)
       end
 
+    def reset(scraper_name, gid, opts={})
+        self.class.put("/scrapers/#{scraper_name}/current_job/pages/#{gid}/reset", @options)
+      end
+
       def enqueue(scraper_name, method, url, opts={})
         body = {}        
         body[:method] =  method != "" ? method : "GET"

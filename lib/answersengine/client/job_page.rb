@@ -19,6 +19,10 @@ module AnswersEngine
         self.class.put("/jobs/#{job_id}/pages/#{gid}", @options)
       end
 
+      def reset(job_id, gid, opts={})
+        self.class.put("/jobs/#{job_id}/pages/#{gid}/reset", @options)
+      end
+
       def enqueue(job_id, method, url, opts={})
         body = {}        
         body[:method] =  method != "" ? method : "GET"
