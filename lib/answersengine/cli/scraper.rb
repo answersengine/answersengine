@@ -7,6 +7,7 @@ module AnswersEngine
         List all scrapers.
       LONGDESC
       option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
+      option :per_page, :aliases => :P, type: :numeric, desc: 'Number of records per page. Max 500 per page.'
       def list
         client = Client::Scraper.new(options)
         puts "#{client.all}"

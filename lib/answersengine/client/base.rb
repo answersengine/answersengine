@@ -15,6 +15,7 @@ module AnswersEngine
 
         query = {}
         query[:p] = opts[:page] if opts[:page]
+        query[:pp] = opts[:per_page] if opts[:per_page]
 
         unless query.empty? 
           @options.merge!(query: query)
