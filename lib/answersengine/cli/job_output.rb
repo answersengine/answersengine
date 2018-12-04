@@ -13,6 +13,7 @@ module AnswersEngine
       LONGDESC
       option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
       option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
+      option :per_page, :aliases => :P, type: :numeric, desc: 'Number of records per page. Max 500 per page.'
       option :collection, :aliases => :c, desc: "Shows outputs from a specific collection.(defaults to 'default' collection)"
       def list(scraper_name)
         collection = options.fetch(:collection) { 'default' }
@@ -49,6 +50,7 @@ module AnswersEngine
       LONGDESC
       option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
       option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
+      option :per_page, :aliases => :P, type: :numeric, desc: 'Number of records per page. Max 500 per page.'
       def collections(scraper_name)
 
         if options[:job]
