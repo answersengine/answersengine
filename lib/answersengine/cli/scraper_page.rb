@@ -30,8 +30,8 @@ module AnswersEngine
           LONGDESC
       option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
       option :method, :aliases => :m, type: :string, desc: 'Set request method. Default: GET'
-      option :headers, :aliases => :H, type: :string, desc: 'Set request headers. Must be in json format. i.e: {"Foo":"bar"} '
-      option :vars, :aliases => :v, type: :string, desc: 'Set user-defined page variables. Must be in json format. i.e: {"Foo":"bar"}'
+      option :headers, :aliases => :H, type: :string, banner: :JSON, desc: 'Set request headers. Must be in json format. i.e: {"Foo":"bar"} '
+      option :vars, :aliases => :v, type: :string, banner: :JSON, desc: 'Set user-defined page variables. Must be in json format. i.e: {"Foo":"bar"}'
       option :page_type, :aliases => :t, desc: 'Set page type'
       option :body, :aliases => :b, desc: 'Set request body'
       option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
