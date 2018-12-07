@@ -16,6 +16,7 @@ module AnswersEngine
         query = {}
         query[:p] = opts[:page] if opts[:page]
         query[:pp] = opts[:per_page] if opts[:per_page]
+        query[:q] = JSON.parse(opts[:query]).to_json if opts[:query]
 
         unless query.empty? 
           @options.merge!(query: query)

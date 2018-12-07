@@ -15,6 +15,7 @@ module AnswersEngine
       option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
       option :per_page, :aliases => :P, type: :numeric, desc: 'Number of records per page. Max 500 per page.'
       option :collection, :aliases => :c, desc: "Shows outputs from a specific collection.(defaults to 'default' collection)"
+      option :query, :aliases => :q, type: :string, banner: :JSON, desc: 'Set search query. Must be in json format. i.e: {"Foo":"bar"} '
       def list(scraper_name)
         collection = options.fetch(:collection) { 'default' }
         if options[:job]
