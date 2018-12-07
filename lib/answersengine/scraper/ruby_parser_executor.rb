@@ -31,7 +31,6 @@ module AnswersEngine
           page = init_page
           outputs = []
           pages = []
-          content = get_content(gid)
           page = init_page_vars(page)
 
           begin
@@ -74,6 +73,10 @@ module AnswersEngine
           end
         end
         proc.call
+      end
+
+      def content
+        @content ||= get_content(gid)
       end
 
       def handle_error(e)
