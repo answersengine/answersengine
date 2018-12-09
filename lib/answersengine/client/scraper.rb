@@ -19,6 +19,7 @@ module AnswersEngine
         body[:freshness_type] = opts[:freshness_type] if opts[:freshness_type]
         body[:force_fetch] = opts[:force_fetch] if opts[:force_fetch]
         body[:worker_count] = opts[:workers] if opts[:workers]
+        body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
 
         @options.merge!({body: body.to_json})
         self.class.post("/scrapers", @options)
@@ -33,6 +34,7 @@ module AnswersEngine
         body[:freshness_type] = opts[:freshness_type] if opts[:freshness_type]
         body[:force_fetch] = opts[:force_fetch] if opts[:force_fetch]
         body[:worker_count] = opts[:workers] if opts[:workers]
+        body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
         @options.merge!({body: body.to_json})
 
         self.class.put("/scrapers/#{scraper_name}", @options)

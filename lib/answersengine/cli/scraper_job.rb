@@ -58,6 +58,7 @@ module AnswersEngine
         Updates a scraper's current job.
       LONGDESC
       option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Scraper job must be restarted(paused then resumed, or cancelled then resumed) for it to take effect. Default: 1. '
+      option :proxy_type, desc: 'Set the Proxy type. Default: standard'
       def update(scraper_name)
         client = Client::ScraperJob.new(options)
         puts "#{client.update(scraper_name, options)}"

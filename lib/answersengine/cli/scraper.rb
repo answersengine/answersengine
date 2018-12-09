@@ -21,6 +21,7 @@ module AnswersEngine
           LONGDESC
       option :branch, :aliases => :b, desc: 'Set the Git branch to use. Default: master'
       option :freshness_type, :aliases => :t, desc: 'Set how fresh the page cache is. Possible values: day, week, month, year. Default: any'
+      option :proxy_type, desc: 'Set the Proxy type. Default: standard'
       option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
       option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
       def create(scraper_name, git_repository)
@@ -36,6 +37,7 @@ module AnswersEngine
       option :name, :aliases => :n, desc: 'Set the scraper name. Name can only consist of alphabets, numbers, underscores and dashes. Name must be unique to your account'
       option :repo, :aliases => :r, desc: 'Set the URL to a valid Git repository'
       option :freshness_type, :aliases => :t, desc: 'Set how fresh the page cache is. Possible values: day, week, month, year. Default: any'
+      option :proxy_type, desc: 'Set the Proxy type. Default: standard'
       option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
       option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
       def update(scraper_name)
@@ -65,6 +67,7 @@ module AnswersEngine
           Starts a scraper by creating an active scrape job\x5
           LONGDESC
       option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
+      option :proxy_type, desc: 'Set the Proxy type. Default: standard'
       def start(scraper_name)
         client = Client::ScraperJob.new(options)
         puts "Starting a scrape job..."
