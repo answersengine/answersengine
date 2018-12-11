@@ -28,6 +28,7 @@ module AnswersEngine
         body[:method] =  method != "" ? method : "GET"
         body[:url] =  url
         body[:page_type] = opts[:page_type] if opts[:page_type]
+        body[:fetch_type] = opts[:fetch_type] if opts[:fetch_type]
         body[:body] = opts[:body] if opts[:body]
         body[:headers] = opts[:headers] if opts[:headers]
         body[:vars] = opts[:vars] if opts[:vars]

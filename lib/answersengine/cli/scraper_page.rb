@@ -35,6 +35,7 @@ module AnswersEngine
       option :headers, :aliases => :H, type: :string, banner: :JSON, desc: 'Set request headers. Must be in json format. i.e: {"Foo":"bar"} '
       option :vars, :aliases => :v, type: :string, banner: :JSON, desc: 'Set user-defined page variables. Must be in json format. i.e: {"Foo":"bar"}'
       option :page_type, :aliases => :t, desc: 'Set page type'
+      option :fetch_type, :aliases => :F, desc: 'Set fetch type. Default: http'
       option :body, :aliases => :b, desc: 'Set request body'
       option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
       option :freshness, :aliases => :s, desc: 'Set how fresh the page cache is. Accepts timestap format.'
