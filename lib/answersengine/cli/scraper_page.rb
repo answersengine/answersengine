@@ -138,6 +138,7 @@ module AnswersEngine
       option :head, :aliases => :H, desc: 'Show the oldest log entries. If not set, newest entries is shown'
       option :parsing, :aliases => :p, type: :boolean, desc: 'Show only log entries related to parsing'
       option :more, :aliases => :m, desc: 'Show next set of log entries. Enter the `More token`'
+      option :per_page, :aliases => :P, type: :numeric, desc: 'Number of records per page. Max 5000 per page.'
       def log(scraper_name, gid)
         client = Client::JobLog.new(options)
 
@@ -146,6 +147,7 @@ module AnswersEngine
         query["job_type"] = "parsing" if options[:parsing]
         
         query["page_token"] = options.delete(:more) if options[:more]
+        query["per_page"] = options.delete(:per_page) if options[:per_page]
 
         if options[:job]
           result = client.all_job_page_log(options[:job], gid, {query: query})

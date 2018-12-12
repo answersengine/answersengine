@@ -85,6 +85,7 @@ module AnswersEngine
       option :seeding, :aliases => :s, type: :boolean, desc: 'Show only log entries related to seeding'
       option :verbose, :aliases => :v, type: :boolean, desc: 'Show all log entries including fetching, seeding, parsing, etc'
       option :more, :aliases => :m, desc: 'Show next set of log entries. Enter the `More token`'
+      option :per_page, :aliases => :P, type: :numeric, desc: 'Number of records per page. Max 5000 per page.'
       def log(scraper_name)
         client = Client::JobLog.new(options)
 
@@ -94,6 +95,7 @@ module AnswersEngine
         query["job_type"] = "seeding" if options[:seeding]
         query["job_type"] = "verbose" if options[:verbose]
         query["page_token"] = options.delete(:more) if options[:more]
+        query["per_page"] = options.delete(:per_page) if options[:per_page]
 
         if options[:job]
           result = client.all_job_log(options[:job], {query: query})
