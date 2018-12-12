@@ -136,14 +136,15 @@ module AnswersEngine
           LONGDESC
       option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
       option :head, :aliases => :H, desc: 'Show the oldest log entries. If not set, newest entries is shown'
-      option :parsing, :aliases => :p, desc: 'Show only log entries related to parsing'
+      option :parsing, :aliases => :p, type: :boolean, desc: 'Show only log entries related to parsing'
       option :more, :aliases => :m, desc: 'Show next set of log entries. Enter the `More token`'
       def log(scraper_name, gid)
         client = Client::JobLog.new(options)
 
         query = {}
         query["order"] = options.delete(:head) if options[:head]
-        query["job_type"] = options.delete(:parsing) if options[:parsing]
+        query["job_type"] = "parsing" if options[:parsing]
+        
         query["page_token"] = options.delete(:more) if options[:more]
 
         if options[:job]
