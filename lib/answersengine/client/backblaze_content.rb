@@ -7,7 +7,7 @@ module AnswersEngine
       include HTTParty    
       
       def get_content(url)
-        self.class.get(url)
+        self.class.get(url, format: :plain)
       end
 
       def get_gunzipped_content(url)
