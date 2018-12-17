@@ -18,7 +18,8 @@ module AnswersEngine
 
         body[:freshness_type] = opts[:freshness_type] if opts[:freshness_type]
         body[:force_fetch] = opts[:force_fetch] if opts[:force_fetch]
-        body[:worker_count] = opts[:workers] if opts[:workers]
+        body[:standard_worker_count] = opts[:workers] if opts[:workers]
+        body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
 
         @options.merge!({body: body.to_json})
@@ -33,7 +34,8 @@ module AnswersEngine
         body[:git_branch] = opts[:branch] if opts[:branch]
         body[:freshness_type] = opts[:freshness_type] if opts[:freshness_type]
         body[:force_fetch] = opts[:force_fetch] if opts[:force_fetch]
-        body[:worker_count] = opts[:workers] if opts[:workers]
+        body[:standard_worker_count] = opts[:workers] if opts[:workers]
+        body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
         @options.merge!({body: body.to_json})
 

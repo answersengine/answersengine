@@ -7,7 +7,8 @@ module AnswersEngine
 
       def create(scraper_name, opts={})
         body = {}
-        body[:worker_count] = opts[:workers] if opts[:workers]
+        body[:standard_worker_count] = opts[:workers] if opts[:workers]
+        body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
         @options.merge!({body: body.to_json})
         self.class.post("/scrapers/#{scraper_name}/jobs", @options)
@@ -20,7 +21,8 @@ module AnswersEngine
       def update(scraper_name, opts={})
         body = {}
         body[:status] = opts[:status] if opts[:status]
-        body[:worker_count] = opts[:workers] if opts[:workers]
+        body[:standard_worker_count] = opts[:workers] if opts[:workers]
+        body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
         @options.merge!({body: body.to_json})
 

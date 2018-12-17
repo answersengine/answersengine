@@ -23,8 +23,10 @@ module AnswersEngine
       option :freshness_type, :aliases => :t, desc: 'Set how fresh the page cache is. Possible values: day, week, month, year. Default: any'
       option :proxy_type, desc: 'Set the Proxy type. Default: standard'
       option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
-      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
+      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many standard workers to use. Default: 1'
+      option :browsers, type: :numeric, desc: 'Set how many browser workers to use. Default: 0'
       def create(scraper_name, git_repository)
+        puts "options #{options}"
         client = Client::Scraper.new(options)
         puts "#{client.create(scraper_name, git_repository, options)}"
       end
@@ -39,7 +41,8 @@ module AnswersEngine
       option :freshness_type, :aliases => :t, desc: 'Set how fresh the page cache is. Possible values: day, week, month, year. Default: any'
       option :proxy_type, desc: 'Set the Proxy type. Default: standard'
       option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
-      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
+      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many standard workers to use. Default: 1'
+      option :browsers, type: :numeric, desc: 'Set how many browser workers to use. Default: 0'
       def update(scraper_name)
         client = Client::Scraper.new(options)
         puts "#{client.update(scraper_name, options)}"
@@ -66,7 +69,8 @@ module AnswersEngine
       long_desc <<-LONGDESC
           Starts a scraper by creating an active scrape job\x5
           LONGDESC
-      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many workers to use. Default: 1'
+      option :workers, :aliases => :w, type: :numeric, desc: 'Set how many standard workers to use. Default: 1'
+      option :browsers, type: :numeric, desc: 'Set how many browser workers to use. Default: 0'
       option :proxy_type, desc: 'Set the Proxy type. Default: standard'
       def start(scraper_name)
         client = Client::ScraperJob.new(options)
