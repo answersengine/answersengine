@@ -12,6 +12,7 @@ module AnswersEngine
       def update(job_id, gid, opts={})
         body = {}        
         body[:page_type] = opts[:page_type] if opts[:page_type]
+        body[:priority] = opts[:priority] if opts[:priority]
         body[:vars] = opts[:vars] if opts[:vars]
         
         @options.merge!({body: body.to_json})
@@ -28,6 +29,7 @@ module AnswersEngine
         body[:method] =  method != "" ? method : "GET"
         body[:url] =  url
         body[:page_type] = opts[:page_type] if opts[:page_type]
+        body[:priority] = opts[:priority] if opts[:priority]
         body[:fetch_type] = opts[:fetch_type] if opts[:fetch_type]
         body[:body] = opts[:body] if opts[:body]
         body[:headers] = opts[:headers] if opts[:headers]
