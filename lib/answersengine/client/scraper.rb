@@ -21,7 +21,9 @@ module AnswersEngine
         body[:standard_worker_count] = opts[:workers] if opts[:workers]
         body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
-
+        body[:disable_scheduler] = opts[:disable_scheduler] if opts[:disable_scheduler]
+        body[:schedule] = opts[:schedule] if opts[:schedule]
+        body[:schedule_timezone] = opts[:schedule_timezone] if opts[:schedule_timezone]
         @options.merge!({body: body.to_json})
         self.class.post("/scrapers", @options)
       end
@@ -37,6 +39,9 @@ module AnswersEngine
         body[:standard_worker_count] = opts[:workers] if opts[:workers]
         body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
+        body[:disable_scheduler] = opts[:disable_scheduler] if opts[:disable_scheduler]
+        body[:schedule] = opts[:schedule] if opts[:schedule]
+        body[:schedule_timezone] = opts[:schedule_timezone] if opts[:schedule_timezone]
         @options.merge!({body: body.to_json})
 
         self.class.put("/scrapers/#{scraper_name}", @options)
