@@ -27,7 +27,7 @@ module AnswersEngine
       option :browsers, type: :numeric, desc: 'Set how many browser workers to use. Default: 0'
       option :disable_scheduler, type: :boolean, desc: 'Set true to disable scheduler. Default: false' 
       option :schedule, type: :string, desc: 'Set the schedule of the scraper to run. Must be in CRON format.'
-      option :schedule_timezone, type: :string, desc: "Set the scheduler's timezone. Must be in IANA Timezone format. Defaults to \"America/Toronto\""
+      option :timezone, type: :string, desc: "Set the scheduler's timezone. Must be in IANA Timezone format. Defaults to \"America/Toronto\""
       def create(scraper_name, git_repository)
         puts "options #{options}"
         client = Client::Scraper.new(options)
@@ -48,7 +48,7 @@ module AnswersEngine
       option :browsers, type: :numeric, desc: 'Set how many browser workers to use. Default: 0'
       option :disable_scheduler, type: :boolean, desc: 'Set true to disable scheduler. Default: false' 
       option :schedule, type: :string, desc: 'Set the schedule of the scraper to run. Must be in CRON format.'
-      option :schedule_timezone, type: :string, desc: "Set the scheduler's timezone. Must be in IANA Timezone format. Defaults to \"America/Toronto\""
+      option :timezone, type: :string, desc: "Set the scheduler's timezone. Must be in IANA Timezone format. Defaults to \"America/Toronto\""
       def update(scraper_name)
         client = Client::Scraper.new(options)
         puts "#{client.update(scraper_name, options)}"
