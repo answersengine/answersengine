@@ -35,11 +35,11 @@ module AnswersEngine
         body[:git_repository] = opts[:repo] if opts[:repo]
         body[:git_branch] = opts[:branch] if opts[:branch]
         body[:freshness_type] = opts[:freshness_type] if opts[:freshness_type]
-        body[:force_fetch] = opts[:force_fetch] if opts[:force_fetch]
+        body[:force_fetch] = opts[:force_fetch] if opts.has_key?("force_fetch")
         body[:standard_worker_count] = opts[:workers] if opts[:workers]
         body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
-        body[:disable_scheduler] = opts[:disable_scheduler] if opts[:disable_scheduler]
+        body[:disable_scheduler] = opts[:disable_scheduler] if opts.has_key?("disable_scheduler")
         body[:schedule] = opts[:schedule] if opts[:schedule]
         body[:schedule_timezone] = opts[:schedule_timezone] if opts[:schedule_timezone]
         @options.merge!({body: body.to_json})
