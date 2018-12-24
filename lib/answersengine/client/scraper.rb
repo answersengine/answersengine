@@ -22,6 +22,7 @@ module AnswersEngine
         body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
         body[:disable_scheduler] = opts[:disable_scheduler] if opts[:disable_scheduler]
+        body[:cancel_current_job] = opts[:cancel_current_job] if opts[:cancel_current_job]
         body[:schedule] = opts[:schedule] if opts[:schedule]
         body[:timezone] = opts[:timezone] if opts[:timezone]
         @options.merge!({body: body.to_json})
@@ -40,6 +41,7 @@ module AnswersEngine
         body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
         body[:disable_scheduler] = opts[:disable_scheduler] if opts.has_key?("disable_scheduler")
+        body[:cancel_current_job] = opts[:cancel_current_job] if opts.has_key?("cancel_current_job")
         body[:schedule] = opts[:schedule] if opts[:schedule]
         body[:timezone] = opts[:timezone] if opts[:timezone]
         @options.merge!({body: body.to_json})
