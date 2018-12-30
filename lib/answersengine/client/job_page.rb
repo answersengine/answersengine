@@ -38,6 +38,7 @@ module AnswersEngine
         body[:freshness] = opts[:freshness] if opts[:freshness]
         body[:ua_type] = opts[:ua_type] if opts[:ua_type]
         body[:no_redirect] = opts[:no_redirect] if opts[:no_redirect]
+        body[:cookie] = opts[:cookie] if opts[:cookie]
         
         @options.merge!({body: body.to_json})
 

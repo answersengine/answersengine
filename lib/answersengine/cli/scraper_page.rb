@@ -33,6 +33,7 @@ module AnswersEngine
       option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
       option :method, :aliases => :m, type: :string, desc: 'Set request method. Default: GET'
       option :headers, :aliases => :H, type: :string, banner: :JSON, desc: 'Set request headers. Must be in json format. i.e: {"Foo":"bar"} '
+      option :cookie, :aliases => :c, type: :string, desc: 'Set request cookie.'
       option :vars, :aliases => :v, type: :string, banner: :JSON, desc: 'Set user-defined page variables. Must be in json format. i.e: {"Foo":"bar"}'
       option :page_type, :aliases => :t, desc: 'Set page type'
       option :priority, type: :numeric, desc: 'Set fetch priority. The higher the value, the sooner the page gets fetched. Default: 0'
