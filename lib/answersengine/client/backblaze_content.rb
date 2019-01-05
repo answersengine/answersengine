@@ -11,7 +11,16 @@ module AnswersEngine
       end
 
       def get_gunzipped_content(url)
-        Zlib.gunzip(get_content(url))
+        # Zlib.gunzip(get_content(url))
+        gunzip(get_content(url))
+      end
+
+      def gunzip(string)
+        sio = StringIO.new(string)
+        gz = Zlib::GzipReader.new(sio, encoding: Encoding::ASCII_8BIT)
+        gz.read
+      ensure
+        gz.close if gz.respond_to?(:close)
       end
     end
   end
