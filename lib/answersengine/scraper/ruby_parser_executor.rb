@@ -46,7 +46,7 @@ module AnswersEngine
 
       def find_output(collection='default', query={})
         result = find_outputs(collection, query, 1, 1)
-        result&.first
+        result.first if result.respond_to?(:first)
       end
 
 
