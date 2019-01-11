@@ -63,6 +63,18 @@ module AnswersEngine
         end
       end
 
+      def get_failed_content(gid)
+        client = Client::GlobalPage.new()
+        content_json = client.find_failed_content(gid)
+
+        if content_json['available']
+          signed_url = content_json['signed_url']
+          Client::BackblazeContent.new.get_gunzipped_content(signed_url)
+        else
+          nil
+        end
+      end
+
       def clean_backtrace(backtrace)
         i = backtrace.index{|x| x =~ /gems\/answersengine/i}
         if i.to_i < 1

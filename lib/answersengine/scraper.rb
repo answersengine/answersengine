@@ -1,4 +1,3 @@
-require "answersengine/scraper/page"
 require "answersengine/scraper/parser"
 require "answersengine/scraper/seeder"
 require "answersengine/scraper/executor"

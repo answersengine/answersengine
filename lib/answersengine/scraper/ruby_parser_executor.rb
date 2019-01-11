@@ -103,6 +103,10 @@ module AnswersEngine
         @content ||= get_content(gid)
       end
 
+      def failed_content
+        @failed_content ||= get_failed_content(gid)
+      end
+
       def handle_error(e)
         error = ["Parsing #{e.class}: #{e.to_s} (Job:#{job_id} GID:#{gid})",clean_backtrace(e.backtrace)].join("\n")
         
