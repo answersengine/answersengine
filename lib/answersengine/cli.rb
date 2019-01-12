@@ -1,5 +1,6 @@
 require 'thor'
 require 'answersengine/scraper'
+require 'answersengine/cli/scraper_exporter'
 require 'answersengine/cli/scraper_job'
 require 'answersengine/cli/global_page'
 require 'answersengine/cli/scraper_page'
