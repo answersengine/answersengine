@@ -1,4 +1,5 @@
 require "answersengine/client/base"
+require 'answersengine/client/export'
 require "answersengine/client/scraper"
 require "answersengine/client/scraper_deployment"
 require "answersengine/client/scraper_job_output"

@@ -13,15 +13,21 @@ module AnswersEngine
       end
 
 
-      desc "list <scraper_name>", "Gets a list of exports on a scraper"
+      desc "list", "Gets a list of exports"
       long_desc <<-LONGDESC
-        List exporters on a scraper.
+        List exports.
       LONGDESC
+      option :scraper_name, :aliases => :s, type: :string, desc: 'Filter by a specific scraper_name'
       option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
       option :per_page, :aliases => :P, type: :numeric, desc: 'Number of records per page. Max 500 per page.'
-      def list(scraper_name)
-        client = Client::ScraperExport.new(options)
-        puts "#{client.all(scraper_name)}"
+      def list()
+        if options[:scraper_name]
+          client = Client::ScraperExport.new(options)
+          puts "#{client.all(options[:scraper_name])}"
+        else
+          client = Client::Export.new(options)
+          puts "#{client.all}"
+        end
       end
 
       desc "download <export_id>", "Download the exported file"
