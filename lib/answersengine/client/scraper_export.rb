@@ -9,6 +9,10 @@ module AnswersEngine
         self.class.get("/scrapers/exports/#{export_id}", @options)
       end
 
+      def create(scraper_name, exporter_name)
+        self.class.post("/scrapers/#{scraper_name}/exports/#{exporter_name}", @options)
+      end
+
       def download(export_id)
         self.class.get("/scrapers/exports/#{export_id}/download", @options)
       end

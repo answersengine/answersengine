@@ -12,6 +12,17 @@ module AnswersEngine
         puts "#{client.find(scraper_name, exporter_name)}"
       end
 
+      desc "start <scraper_name> <exporter_name>", "Starts an export"
+      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      def start(scraper_name, exporter_name)
+        if options[:job]
+          client = Client::JobExport.new(options)
+          puts "#{client.create(options[:job], exporter_name)}"
+        else
+          client = Client::ScraperExport.new(options)
+          puts "#{client.create(scraper_name, exporter_name)}"
+        end
+      end
 
       desc "list <scraper_name>", "gets a list of exporters on a scraper"
       long_desc <<-LONGDESC
