@@ -158,8 +158,12 @@ module AnswersEngine
       desc "page SUBCOMMAND ...ARGS", "manage pages on a job"
       subcommand "page", ScraperPage
 
-      desc "exporter SUBCOMMAND ...ARGS", "manage scrapers exporters"
+      desc "export SUBCOMMAND ...ARGS", "manage scraper's exports"
+      subcommand "export", ScraperExport
+
+      desc "exporter SUBCOMMAND ...ARGS", "manage scraper's exporters"
       subcommand "exporter", ScraperExporter
+
 
     end
   end
