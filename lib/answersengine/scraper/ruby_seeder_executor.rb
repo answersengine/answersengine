@@ -9,6 +9,12 @@ module AnswersEngine
 
       end
 
+      def exposed_methods
+        @exposed_methods ||= [
+          :save_pages
+        ].freeze
+      end
+
       def exec_seeder(save=false)
         @save = save
         if save
@@ -16,20 +22,20 @@ module AnswersEngine
         else
           puts "Trying seeder script"
         end
-        
+
         eval_seeder_script(save)
       end
 
       def eval_seeder_script(save=false)
         proc = Proc.new do
           pages = []
-          
+
           begin
+            context = isolated_binding({
+              pages: pages
+            })
+            eval(File.read(filename), context, filename)
 
-            eval(File.read(filename), binding, filename)
-
-            
-            
             if save
               save_pages(pages, true)
             end
@@ -39,12 +45,12 @@ module AnswersEngine
             unless pages.empty?
               puts "----------- New Pages to Enqueue: -----------"
               puts JSON.pretty_generate(pages)
-              
+
             end
 
 
           rescue SyntaxError => e
-            handle_error(e) if save 
+            handle_error(e) if save
             raise e
           rescue => e
             handle_error(e) if save
@@ -62,11 +68,11 @@ module AnswersEngine
             pages_slice = pages.shift(pages_per_slice)
             log_msg = "Seeding #{pages_slice.count} out of #{total_pages} Pages"
             puts "log_info: #{log_msg}"
-            
+
             response = seeding_update(
-              job_id: job_id, 
-              pages: pages_slice,  
-              seeding_done: seeding_done) 
+              job_id: job_id,
+              pages: pages_slice,
+              seeding_done: seeding_done)
 
             if response.code == 200
               puts "Job Seed Updated."
@@ -81,10 +87,10 @@ module AnswersEngine
 
       def handle_error(e)
         error = ["Seeding #{e.class}: #{e.to_s} (Job:#{job_id}",clean_backtrace(e.backtrace)].join("\n")
-        
+
         seeding_update(
-          job_id: job_id, 
-          seeding_failed: true, 
+          job_id: job_id,
+          seeding_failed: true,
           log_error: error)
       end
 

@@ -9,18 +9,30 @@ module AnswersEngine
         @page_vars = options.fetch(:vars) { {} }
       end
 
+      def exposed_methods
+        @exposed_methods ||= [
+          :content,
+          :failed_content,
+          :outputs,
+          :pages,
+          :page,
+          :find_output,
+          :find_outputs
+        ].freeze
+      end
+
       def exec_parser(save=false)
         if save
           puts "Executing parser script"
         else
           puts "Trying parser script"
         end
-        
+
         eval_parser_script(save)
       end
 
-      def init_page_vars(page) 
-        if !@page_vars.nil? && !@page_vars.empty? 
+      def init_page_vars(page)
+        if !@page_vars.nil? && !@page_vars.empty?
           page['vars'] = @page_vars
         end
         page
@@ -49,7 +61,6 @@ module AnswersEngine
         result.first if result.respond_to?(:first)
       end
 
-
       def eval_parser_script(save=false)
         proc = Proc.new do
           page = init_page
@@ -58,10 +69,14 @@ module AnswersEngine
           page = init_page_vars(page)
 
           begin
-
-            eval(File.read(filename), binding, filename)
+            context = isolated_binding({
+              outputs: outputs,
+              pages: pages,
+              page: page
+            })
+            eval(File.read(filename), context, filename)
           rescue SyntaxError => e
-            handle_error(e) if save 
+            handle_error(e) if save
             raise e
           rescue => e
             handle_error(e) if save
@@ -73,10 +88,10 @@ module AnswersEngine
           if save
             # puts "output to save: #{{job_id: job_id, gid: gid,outputs: outputs, pages: pages}} "
             response = parsing_update(
-              job_id: job_id, 
+              job_id: job_id,
               gid: gid,
-              outputs: outputs, 
-              pages: pages) 
+              outputs: outputs,
+              pages: pages)
 
             if response.code == 200
               puts "Job Page Status Updated."
@@ -93,7 +108,7 @@ module AnswersEngine
           unless pages.empty?
             puts "----------- New Pages to Enqueue: -----------"
             puts JSON.pretty_generate(pages)
-            
+
           end
         end
         proc.call
@@ -109,11 +124,11 @@ module AnswersEngine
 
       def handle_error(e)
         error = ["Parsing #{e.class}: #{e.to_s} (Job:#{job_id} GID:#{gid})",clean_backtrace(e.backtrace)].join("\n")
-        
+
         parsing_update(
-          job_id: job_id, 
-          gid: gid, 
-          parsing_failed: true, 
+          job_id: job_id,
+          gid: gid,
+          parsing_failed: true,
           log_error: error)
       end
 
