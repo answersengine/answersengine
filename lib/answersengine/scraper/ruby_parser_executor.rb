@@ -1,6 +1,7 @@
 module AnswersEngine
   module Scraper
     class RubyParserExecutor < Executor
+      attr_accessor :save
 
       def initialize(options={})
         @filename = options.fetch(:filename) { raise "Filename is required"}
@@ -16,12 +17,15 @@ module AnswersEngine
           :outputs,
           :pages,
           :page,
+          :save_pages,
+          :save_outputs,
           :find_output,
           :find_outputs
         ].freeze
       end
 
       def exec_parser(save=false)
+        @save = save
         if save
           puts "Executing parser script"
         else
@@ -61,7 +65,91 @@ module AnswersEngine
         result.first if result.respond_to?(:first)
       end
 
+      def save_pages_and_outputs(pages = [], outputs = [], parsing_status = :parsing)
+          total_pages = pages.count
+          total_outputs = outputs.count
+          records_per_slice = 100
+          until pages.empty? && outputs.empty?
+            pages_slice = pages.shift(records_per_slice)
+            outputs_slice = outputs.shift(records_per_slice)
+             
+            log_msgs = []
+            unless pages_slice.empty?
+              log_msgs << "#{pages_slice.count} out of #{total_pages} Pages"
+            end
+
+            unless outputs_slice.empty?
+              log_msgs << "#{outputs_slice.count} out of #{total_outputs} Outputs"
+            end
+
+            log_msg = "Saving #{log_msgs.join(' and ')}."
+            puts "#{log_msg}"
+
+            # saving to server
+            response = parsing_update(
+              job_id: job_id,
+              gid: gid,
+              pages: pages_slice,
+              outputs: outputs_slice,
+              parsing_status: parsing_status)
+
+            if response.code == 200
+              log_msg = "Saved."
+              puts "#{log_msg}"
+            else
+              puts "Error: Unable to save Pages and/or Outputs to server: #{response.body}"
+              raise "Unable to save Pages and/or Outputs to server: #{response.body}"
+            end
+          end
+      end
+
+      def update_parsing_starting_status
+        if save
+          response = parsing_update(
+            job_id: job_id,
+            gid: gid,
+            parsing_status: :starting)
+
+          if response.code == 200
+            puts "Page Parsing Status Updated."
+          else
+            puts "Error: Unable to save Page Parsing Status to server: #{response.body}"
+            raise "Unable to save Page Parsing Status to server: #{response.body}"
+          end
+        end
+      end
+
+      def update_parsing_done_status
+        if save
+          response = parsing_update(
+            job_id: job_id,
+            gid: gid,
+            parsing_status: :done)
+
+          if response.code == 200
+            puts "Page Parsing Done."
+          else
+            puts "Error: Unable to save Page Parsing Done Status to server: #{response.body}"
+            raise "Unable to save Page Parsing Done Status to server: #{response.body}"
+          end
+        end
+      end
+
+      def save_pages(pages=[])
+        if save
+          save_pages_and_outputs(pages, [], :parsing)
+        end
+      end 
+
+      def save_outputs(outputs=[])
+        if save
+          save_pages_and_outputs([], outputs, :parsing)
+        end
+      end 
+
       def eval_parser_script(save=false)
+        update_parsing_starting_status
+
         proc = Proc.new do
           page = init_page
           outputs = []
@@ -86,18 +174,8 @@ module AnswersEngine
           puts "=========== Parsing Executed ==========="
 
           if save
-            # puts "output to save: #{{job_id: job_id, gid: gid,outputs: outputs, pages: pages}} "
-            response = parsing_update(
-              job_id: job_id,
-              gid: gid,
-              outputs: outputs,
-              pages: pages)
-
-            if response.code == 200
-              puts "Job Page Status Updated."
-            else
-              puts "Error: Unable to save to server: #{response.body}"
-            end
+            save_pages_and_outputs(pages, outputs)
+            update_parsing_done_status
           end
 
           unless outputs.empty?
