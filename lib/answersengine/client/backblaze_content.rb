@@ -18,7 +18,25 @@ module AnswersEngine
       def gunzip(string)
         sio = StringIO.new(string)
         gz = Zlib::GzipReader.new(sio, encoding: Encoding::ASCII_8BIT)
-        gz.read
+        _content = ""
+        begin 
+          _content = gz.read
+        rescue => e
+          # if unexpected eof error, then readchar until error, and ignore it
+          if e.to_s == 'unexpected end of file'
+            begin 
+              while !gz.eof?
+                _content += gz.readchar
+              end
+            rescue => e
+              puts "Ignored Zlib error: #{e.to_s}"
+            end
+          else 
+            raise e
+          end
+        end
+
+        return _content
       ensure
         gz.close if gz.respond_to?(:close)
       end
