@@ -12,6 +12,7 @@ module AnswersEngine
         List all pages in a scraper's current job.\x5
       LONGDESC
       option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
+      option :page_type, :aliases => :t, type: :string, desc: 'Filter by page_type'
       option :page, :aliases => :p, type: :numeric, desc: 'Get the next set of records by page.'
       option :per_page, :aliases => :P, type: :numeric, desc: 'Number of records per page. Max 500 per page.'
       option :fetch_fail, type: :boolean, desc: 'Returns only pages that fails fetching.'
