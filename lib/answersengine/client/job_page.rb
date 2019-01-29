@@ -50,7 +50,7 @@ module AnswersEngine
         body[:outputs] = opts.fetch(:outputs) {[]}
         body[:pages] = opts.fetch(:pages) {[]}
         body[:parsing_failed] = opts.fetch(:parsing_failed){ false }
-        body[:parsing_status] = opts.fetch(:parsing_status){ false }
+        body[:parsing_status] = opts.fetch(:parsing_status){ nil }
         body[:log_error] = opts[:log_error] if opts[:log_error]
         
         @options.merge!({body: body.to_json})

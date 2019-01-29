@@ -207,6 +207,7 @@ module AnswersEngine
           job_id: job_id,
           gid: gid,
           parsing_failed: true,
+          parsing_status: "failed",
           log_error: error)
       end
 
