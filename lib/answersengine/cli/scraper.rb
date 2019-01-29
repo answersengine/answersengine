@@ -109,21 +109,24 @@ module AnswersEngine
         query["page_token"] = options.delete(:more) if options[:more]
         query["per_page"] = options.delete(:per_page) if options[:per_page]
 
+        puts "Fetching logs..."
+
         if options[:job]
           result = client.all_job_log(options[:job], {query: query})
         else
           result = client.scraper_all_job_log(scraper_name, {query: query})
         end
 
-        unless result["entries"].nil?
-
+        if result['entries'].nil? || result["entries"].length == 0
+          puts "No logs yet, please try again later."
+        else
           more_token = result["more_token"]
 
           result["entries"].each do |entry|
             puts "#{entry["timestamp"]} #{entry["severity"]}: #{entry["payload"]}" if entry.is_a?(Hash)
           end
 
-          unless more_token == ""
+          unless more_token.nil?
             puts "-----------"
             puts "To see more entries, add: \"--more #{more_token}\""
           end
