@@ -29,8 +29,8 @@ module AnswersEngine
         object
       end
 
-      # Create an isolated binding
-      def isolated_binding vars
+      # Create isolated context object from self
+      def create_context vars = {}
         create_top_object_script = '(
           lambda do
             object = Object.new
@@ -43,7 +43,12 @@ module AnswersEngine
         object = TOPLEVEL_BINDING.eval(create_top_object_script)
         env = exposed_env(vars)
         expose_to object, env
-        object.context_binding
+        object
+      end
+
+      # Create an isolated binding
+      def isolated_binding vars = {}
+        create_context(vars).context_binding
       end
     end
   end

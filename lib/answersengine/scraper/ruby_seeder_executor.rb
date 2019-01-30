@@ -11,6 +11,7 @@ module AnswersEngine
 
       def self.exposed_methods
         [
+          :pages,
           :save_pages
         ].freeze
       end
