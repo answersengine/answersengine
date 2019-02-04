@@ -10,8 +10,8 @@ module AnswersEngine
         @page_vars = options.fetch(:vars) { {} }
       end
 
-      def exposed_methods
-        @exposed_methods ||= [
+      def self.exposed_methods
+        [
           :content,
           :failed_content,
           :outputs,
@@ -72,7 +72,7 @@ module AnswersEngine
           until pages.empty? && outputs.empty?
             pages_slice = pages.shift(records_per_slice)
             outputs_slice = outputs.shift(records_per_slice)
-             
+
             log_msgs = []
             unless pages_slice.empty?
               log_msgs << "#{pages_slice.count} out of #{total_pages} Pages"
@@ -139,13 +139,13 @@ module AnswersEngine
         if save
           save_pages_and_outputs(pages, [], :parsing)
         end
-      end 
+      end
 
       def save_outputs(outputs=[])
         if save
           save_pages_and_outputs([], outputs, :parsing)
         end
-      end 
+      end
 
       def eval_parser_script(save=false)
         update_parsing_starting_status

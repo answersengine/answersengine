@@ -64,7 +64,6 @@ RSpec.describe AnswersEngine::Scraper::RubySeederExecutor do
         begin
           __mock_set_test_result Scraper.hello_world
         rescue Exception => e
-          byebug
           __mock_set_test_result \"\#{e.message}\\n\#{e.backtrace}\"
         end
       "

@@ -90,7 +90,6 @@ RSpec.describe AnswersEngine::Scraper::RubyParserExecutor do
         begin
           __mock_set_test_result Scraper.hello_world
         rescue Exception => e
-          byebug
           __mock_set_test_result \"\#{e.message}\\n\#{e.backtrace}\"
         end
       "

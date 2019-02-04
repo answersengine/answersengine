@@ -9,8 +9,9 @@ module AnswersEngine
 
       end
 
-      def exposed_methods
-        @exposed_methods ||= [
+      def self.exposed_methods
+        [
+          :pages,
           :save_pages
         ].freeze
       end
