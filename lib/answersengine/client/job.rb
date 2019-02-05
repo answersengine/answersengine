@@ -36,9 +36,9 @@ module AnswersEngine
 
       def seeding_update(job_id, opts={})
         body = {}
+        body[:outputs] = opts.fetch(:outputs) {[]}
         body[:pages] = opts.fetch(:pages) {[]}
-        body[:seeding_failed] = opts.fetch(:seeding_failed){ false }
-        body[:seeding_done] = opts.fetch(:seeding_done){ false }
+        body[:seeding_status] = opts.fetch(:seeding_status){ nil }
         body[:log_error] = opts[:log_error] if opts[:log_error]
         
         @options.merge!({body: body.to_json})

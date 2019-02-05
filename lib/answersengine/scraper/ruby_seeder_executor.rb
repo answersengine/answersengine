@@ -6,13 +6,16 @@ module AnswersEngine
       def initialize(options={})
         @filename = options.fetch(:filename) { raise "Filename is required"}
         @job_id = options[:job_id]
-
       end
 
       def self.exposed_methods
         [
+          :outputs,
           :pages,
-          :save_pages
+          :save_pages,
+          :save_outputs,
+          :find_output,
+          :find_outputs
         ].freeze
       end
 
@@ -28,28 +31,18 @@ module AnswersEngine
       end
 
       def eval_seeder_script(save=false)
+        update_seeding_starting_status
+
         proc = Proc.new do
+          outputs = []
           pages = []
 
           begin
             context = isolated_binding({
+              outputs: outputs,
               pages: pages
             })
             eval(File.read(filename), context, filename)
-
-            if save
-              save_pages(pages, true)
-            end
-
-            puts "=========== Seeding Script Executed ==========="
-
-            unless pages.empty?
-              puts "----------- New Pages to Enqueue: -----------"
-              puts JSON.pretty_generate(pages)
-
-            end
-
-
           rescue SyntaxError => e
             handle_error(e) if save
             raise e
@@ -57,31 +50,74 @@ module AnswersEngine
             handle_error(e) if save
             raise e
           end
+
+          puts "=========== Seeding Executed ==========="
+
+          if save
+            save_pages_and_outputs(pages, outputs, :seeding)
+            update_seeding_done_status
+          end
+
+          unless outputs.empty?
+            puts "----------- Outputs: -----------"
+            puts JSON.pretty_generate(outputs)
+          end
+
+          unless pages.empty?
+            puts "----------- New Pages to Enqueue: -----------"
+            puts JSON.pretty_generate(pages)
+
+          end
         end
         proc.call
       end
 
-      def save_pages(pages=[], seeding_done = false)
+      def save_pages(pages=[])
         if save
-          total_pages = pages.count
-          pages_per_slice = 100
-          until pages.empty?
-            pages_slice = pages.shift(pages_per_slice)
-            log_msg = "Seeding #{pages_slice.count} out of #{total_pages} Pages"
-            puts "log_info: #{log_msg}"
+          save_pages_and_outputs(pages, [], :seeding)
+        end
+      end
 
-            response = seeding_update(
-              job_id: job_id,
-              pages: pages_slice,
-              seeding_done: seeding_done)
+      def save_outputs(outputs=[])
+        if save
+          save_pages_and_outputs([], outputs, :seeding)
+        end
+      end
 
-            if response.code == 200
-              puts "Job Seed Updated."
-              puts "Seeding done." if seeding_done
-            else
-              puts "Error: Unable to save to server: #{response.body}"
-              raise "Unable to save to server: #{response.body}"
-            end
+      def update_to_server(opts = {})
+        seeding_update(
+          job_id: opts[:job_id],
+          pages: opts[:pages],
+          outputs: opts[:outputs],
+          seeding_status: opts[:status])
+      end
+
+      def update_seeding_starting_status
+        if save
+          response = seeding_update(
+            job_id: job_id,
+            seeding_status: :starting)
+
+          if response.code == 200
+            puts "Seeding Status Updated."
+          else
+            puts "Error: Unable to save Seeding Status to server: #{response.body}"
+            raise "Unable to save Seeding Status to server: #{response.body}"
+          end
+        end
+      end
+
+      def update_seeding_done_status
+        if save
+          response = seeding_update(
+            job_id: job_id,
+            seeding_status: :done)
+
+          if response.code == 200
+            puts "Seeding Done."
+          else
+            puts "Error: Unable to save Seeding Done Status to server: #{response.body}"
+            raise "Unable to save Seeding Done Status to server: #{response.body}"
           end
         end
       end
@@ -91,7 +127,7 @@ module AnswersEngine
 
         seeding_update(
           job_id: job_id,
-          seeding_failed: true,
+          seeding_status: :failed,
           log_error: error)
       end
 

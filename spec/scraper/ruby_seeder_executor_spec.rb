@@ -5,7 +5,9 @@ RSpec.describe AnswersEngine::Scraper::RubySeederExecutor do
     @seeder_script = Tempfile.new(['seeder_script', '.rb'], encoding: 'UTF-8')
     @seeder_script.write "
       pages << {'gid' => '123', 'page' => 'Success!'}
-      save_pages [{'page' => 'pageA'}, {'page' => 'pageB'}]
+      outputs << {'gid' => '123', 'output' => 'Success!'}
+      find_output 'collectionA', {'_id' => 'outputA'}
+      find_outputs 'collectionB', {'_id' => 'outputB'}
     "
     @seeder_script.flush
     @seeder_script.close
@@ -24,23 +26,45 @@ RSpec.describe AnswersEngine::Scraper::RubySeederExecutor do
     class << @executor
       define_method(:__mock_set_test_result){|result|@__mock_test_result = result}
       define_method(:__mock_test_result){@__mock_test_result}
-      define_method(:save_pages) do |*args|
-        @__mock_test_result = [] if @__mock_test_result.nil?
-        @__mock_test_result << args
+      define_method(:seeding_update) do |opts|
+        @__mock_test_result = opts.merge!(
+          find_output_args: @__mock_find_output_args,
+          find_outputs_args: @__mock_find_outputs_args
+        )
+        object = Object.new
+        class << object
+          define_method(:code){200}
+        end
+        object
       end
+      define_method(:init_page){{'gid' => '123'}}
+      define_method(:find_output){|*args|@__mock_find_output_args = args}
+      define_method(:find_outputs){|*args|@__mock_find_outputs_args = args}
     end
+  end
+
+  it "should save outputs from script" do
+    @executor.eval_seeder_script true
+    result = @executor.__mock_test_result
+    expect(result[:outputs]).to eql [{'gid' => '123', 'output' => 'Success!'}]
   end
 
   it "should save pages from script" do
     @executor.eval_seeder_script true
     result = @executor.__mock_test_result
-    expect(result[1]).to eql [[{'gid' => '123', 'page' => 'Success!'}], true]
+    expect(result[:pages]).to eql [{'gid' => '123', 'page' => 'Success!'}]
   end
 
-  it "should execute save_pages from script" do
+  it "should execute find_output from script" do
     @executor.eval_seeder_script true
     result = @executor.__mock_test_result
-    expect(result[0]).to eql [[{'page' => 'pageA'}, {'page' => 'pageB'}]]
+    expect(result[:find_output_args]).to eql ['collectionA', {'_id' => 'outputA'}]
+  end
+
+  it "should execute find_outputs from script" do
+    @executor.eval_seeder_script true
+    result = @executor.__mock_test_result
+    expect(result[:find_outputs_args]).to eql ['collectionB', {'_id' => 'outputB'}]
   end
 
   it "should eval without class context" do

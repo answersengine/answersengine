@@ -42,65 +42,13 @@ module AnswersEngine
         page
       end
 
-      def find_outputs(collection='default', query={}, page=1, per_page=30)
-        raise "query needs to be a Hash, instead of: #{query}" unless query.is_a?(Hash)
-
-        options = {
-          query: query,
-          page: page,
-          per_page: per_page}
-
-        client = Client::JobOutput.new(options)
-        response = client.all(job_id, collection)
-
-        if response.code == 200 && response.body != 'null'
-          response
-        else
-          []
-        end
-      end
-
-      def find_output(collection='default', query={})
-        result = find_outputs(collection, query, 1, 1)
-        result.first if result.respond_to?(:first)
-      end
-
-      def save_pages_and_outputs(pages = [], outputs = [], parsing_status = :parsing)
-          total_pages = pages.count
-          total_outputs = outputs.count
-          records_per_slice = 100
-          until pages.empty? && outputs.empty?
-            pages_slice = pages.shift(records_per_slice)
-            outputs_slice = outputs.shift(records_per_slice)
-
-            log_msgs = []
-            unless pages_slice.empty?
-              log_msgs << "#{pages_slice.count} out of #{total_pages} Pages"
-            end
-
-            unless outputs_slice.empty?
-              log_msgs << "#{outputs_slice.count} out of #{total_outputs} Outputs"
-            end
-
-            log_msg = "Saving #{log_msgs.join(' and ')}."
-            puts "#{log_msg}"
-
-            # saving to server
-            response = parsing_update(
-              job_id: job_id,
-              gid: gid,
-              pages: pages_slice,
-              outputs: outputs_slice,
-              parsing_status: parsing_status)
-
-            if response.code == 200
-              log_msg = "Saved."
-              puts "#{log_msg}"
-            else
-              puts "Error: Unable to save Pages and/or Outputs to server: #{response.body}"
-              raise "Unable to save Pages and/or Outputs to server: #{response.body}"
-            end
-          end
+      def update_to_server(opts = {})
+        parsing_update(
+          job_id: opts[:job_id],
+          gid: opts[:gid],
+          pages: opts[:pages],
+          outputs: opts[:outputs],
+          parsing_status: opts[:status])
       end
 
       def update_parsing_starting_status
@@ -174,7 +122,7 @@ module AnswersEngine
           puts "=========== Parsing Executed ==========="
 
           if save
-            save_pages_and_outputs(pages, outputs)
+            save_pages_and_outputs(pages, outputs, :parsing)
             update_parsing_done_status
           end
 
@@ -206,8 +154,7 @@ module AnswersEngine
         parsing_update(
           job_id: job_id,
           gid: gid,
-          parsing_failed: true,
-          parsing_status: "failed",
+          parsing_status: :failed,
           log_error: error)
       end
 
