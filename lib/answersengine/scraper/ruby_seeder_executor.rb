@@ -42,7 +42,7 @@ module AnswersEngine
               outputs: outputs,
               pages: pages
             })
-            eval(File.read(filename), context, filename)
+            eval_with_context filename, context
           rescue SyntaxError => e
             handle_error(e) if save
             raise e
@@ -72,16 +72,8 @@ module AnswersEngine
         proc.call
       end
 
-      def save_pages(pages=[])
-        if save
-          save_pages_and_outputs(pages, [], :seeding)
-        end
-      end
-
-      def save_outputs(outputs=[])
-        if save
-          save_pages_and_outputs([], outputs, :seeding)
-        end
+      def save_type
+        :seeding
       end
 
       def update_to_server(opts = {})

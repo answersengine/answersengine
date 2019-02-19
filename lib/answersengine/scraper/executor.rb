@@ -1,7 +1,11 @@
 require 'nokogiri'
 module AnswersEngine
   module Scraper
+    # @abstract
     class Executor
+      # Max allowed page size when query outputs (see #find_outputs).
+      MAX_FIND_OUTPUTS_PER_PAGE = 500
+
       attr_accessor :filename, :gid, :job_id
 
       include AnswersEngine::Plugin::ContextExposer
@@ -76,16 +80,77 @@ module AnswersEngine
         end
       end
 
-      def find_outputs(collection='default', query={}, page=1, per_page=30)
-        raise "query needs to be a Hash, instead of: #{query}" unless query.is_a?(Hash)
+      # Get current job id from scraper or default when scraper_name is null.
+      #
+      # @param [String|nil] scraper_name Scraper name.
+      # @param [Integer|nil] default (nil) Default job id when no scraper name.
+      #
+      # @raise [Exception] When scraper name is not null, and scraper doesn't
+      #   exists or it has no current job.
+      def get_job_id scraper_name, default = nil
+        return default if scraper_name.nil?
+        job = Client::ScraperJob.new().find(scraper_name)
+        raise JSON.pretty_generate(job) if job['job_id'].nil?
+        job['job_id']
+      end
+
+      # Find outputs by collection and query with pagination.
+      #
+      # @param [String] collection ('default') Collection name.
+      # @param [Hash] query ({}) Filters to query.
+      # @param [Integer] page (1) Page number.
+      # @param [Integer] per_page (30) Page size.
+      # @param [Hash] opts ({}) Configuration options.
+      # @option opts [String|nil] :scraper_name (nil) Scraper name to query
+      #   from.
+      # @option opts [Integer|nil] :job_id (nil) Job's id to query from.
+      #
+      # @raise [ArgumentError] +collection+ is not String.
+      # @raise [ArgumentError] +query+ is not a Hash.
+      # @raise [ArgumentError] +page+ is not an Integer greater than 0.
+      # @raise [ArgumentError] +per_page+ is not an Integer between 1 and 500.
+      #
+      # @return [Array]
+      #
+      # @example
+      #   find_outputs
+      # @example
+      #   find_outputs 'my_collection'
+      # @example
+      #   find_outputs 'my_collection', {}
+      # @example
+      #   find_outputs 'my_collection', {}, 1
+      # @example
+      #   find_outputs 'my_collection', {}, 1, 30
+      # @example Find from another scraper by name
+      #   find_outputs 'my_collection', {}, 1, 30, scraper_name: 'my_scraper'
+      # @example Find from another scraper by job_id
+      #   find_outputs 'my_collection', {}, 1, 30, job_id: 123
+      #
+      # @note *opts `:job_id` option is prioritize over `:scraper_name` when
+      #   both exists. If none add provided or nil values, then current job
+      #   will be used to query instead, this is the defaul behavior.
+      def find_outputs(collection='default', query={}, page=1, per_page=30, opts = {})
+        # Validate parameters out from nil for easier user usage.
+        raise ArgumentError.new("collection needs to be a String") unless collection.is_a?(String)
+        raise ArgumentError.new("query needs to be a Hash, instead of: #{query}") unless query.is_a?(Hash)
+        unless page.is_a?(Integer) && page > 0
+          raise ArgumentError.new("page needs to be an Integer greater than 0")
+        end
+        unless per_page.is_a?(Integer) && per_page > 0 && per_page <= MAX_FIND_OUTPUTS_PER_PAGE
+          raise ArgumentError.new("per_page needs to be an Integer between 1 and #{MAX_FIND_OUTPUTS_PER_PAGE}")
+        end
 
         options = {
           query: query,
           page: page,
           per_page: per_page}
 
+        # Get job_id
+        query_job_id = opts[:job_id] || get_job_id(opts[:scraper_name], self.job_id)
+
         client = Client::JobOutput.new(options)
-        response = client.all(job_id, collection)
+        response = client.all(query_job_id, collection)
 
         if response.code == 200 && response.body != 'null'
           response
@@ -94,9 +159,37 @@ module AnswersEngine
         end
       end
 
-      def find_output(collection='default', query={})
-        result = find_outputs(collection, query, 1, 1)
-        result.first if result.respond_to?(:first)
+      # Find one output by collection and query with pagination.
+      #
+      # @param [String] collection ('default') Collection name.
+      # @param [Hash] query ({}) Filters to query.
+      # @param [Hash] opts ({}) Configuration options.
+      # @option opts [String|nil] :scraper_name (nil) Scraper name to query
+      #   from.
+      # @option opts [Integer|nil] :job_id (nil) Job's id to query from.
+      #
+      # @raise [ArgumentError] +collection+ is not String.
+      # @raise [ArgumentError] +query+ is not a Hash.
+      #
+      # @return [Hash|nil] `Hash` when found, and `nil` when no output is found.
+      #
+      # @example
+      #   find_output
+      # @example
+      #   find_output 'my_collection'
+      # @example
+      #   find_output 'my_collection', {}
+      # @example Find from another scraper by name
+      #   find_output 'my_collection', {}, scraper_name: 'my_scraper'
+      # @example Find from another scraper by job_id
+      #   find_output 'my_collection', {}, job_id: 123
+      #
+      # @note *opts `:job_id` option is prioritize over `:scraper_name` when
+      #   both exists. If none add provided or nil values, then current job
+      #   will be used to query instead, this is the defaul behavior.
+      def find_output(collection='default', query={}, opts = {})
+        result = find_outputs(collection, query, 1, 1, opts)
+        result.respond_to?(:first) ? result.first : nil
       end
 
       def save_pages_and_outputs(pages = [], outputs = [], status)
@@ -148,6 +241,51 @@ module AnswersEngine
         else
           return backtrace[0..(i-1)]
         end
+      end
+
+      def save_type
+        raise NotImplementedError.new('Need to implement "save_type" method.')
+      end
+
+      # Saves pages from an array and clear it.
+      #
+      # @param [Array] pages ([]) Page array to save. Warning: all elements will
+      #   be removed from the array.
+      #
+      # @note IMPORTANT: +pages+ array's elements will be removed.
+      def save_pages(pages=[])
+        unless save
+          # Clear outputs as save would have do
+          pages.clear
+          return
+        end
+        save_pages_and_outputs(pages, [], save_type)
+      end
+
+      # Saves outputs from an array and clear it.
+      #
+      # @param [Array] outputs ([]) Output array to save. Warning: all elements
+      #   will be removed from the array.
+      #
+      # @note IMPORTANT: +outputs+ array's elements will be removed.
+      def save_outputs(outputs=[])
+        unless save
+          # Clear outputs as save would have do
+          outputs.clear
+          return
+        end
+        save_pages_and_outputs([], outputs, save_type)
+      end
+
+      # Eval a filename with a custom binding
+      #
+      # @param [String] filename File path to read.
+      # @param [Binding] context Context binding to evaluate with.
+      #
+      # @note Using this method will allow scripts to contain `return` to
+      #   exit the script sooner along some improved security.
+      def eval_with_context file_path, context
+        eval(File.read(file_path), context, file_path)
       end
     end
   end

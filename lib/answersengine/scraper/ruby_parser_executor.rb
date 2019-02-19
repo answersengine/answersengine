@@ -83,16 +83,8 @@ module AnswersEngine
         end
       end
 
-      def save_pages(pages=[])
-        if save
-          save_pages_and_outputs(pages, [], :parsing)
-        end
-      end
-
-      def save_outputs(outputs=[])
-        if save
-          save_pages_and_outputs([], outputs, :parsing)
-        end
+      def save_type
+        :parsing
       end
 
       def eval_parser_script(save=false)
@@ -110,7 +102,7 @@ module AnswersEngine
               pages: pages,
               page: page
             })
-            eval(File.read(filename), context, filename)
+            eval_with_context filename, context
           rescue SyntaxError => e
             handle_error(e) if save
             raise e
