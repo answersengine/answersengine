@@ -52,22 +52,8 @@ module AnswersEngine
           end
 
           puts "=========== Seeding Executed ==========="
-
-          if save
-            save_pages_and_outputs(pages, outputs, :seeding)
-            update_seeding_done_status
-          end
-
-          unless outputs.empty?
-            puts "----------- Outputs: -----------"
-            puts JSON.pretty_generate(outputs)
-          end
-
-          unless pages.empty?
-            puts "----------- New Pages to Enqueue: -----------"
-            puts JSON.pretty_generate(pages)
-
-          end
+          save_pages_and_outputs(pages, outputs, :seeding)
+          update_seeding_done_status
         end
         proc.call
       end
@@ -85,32 +71,32 @@ module AnswersEngine
       end
 
       def update_seeding_starting_status
-        if save
-          response = seeding_update(
-            job_id: job_id,
-            seeding_status: :starting)
+        return unless save
 
-          if response.code == 200
-            puts "Seeding Status Updated."
-          else
-            puts "Error: Unable to save Seeding Status to server: #{response.body}"
-            raise "Unable to save Seeding Status to server: #{response.body}"
-          end
+        response = seeding_update(
+          job_id: job_id,
+          seeding_status: :starting)
+
+        if response.code == 200
+          puts "Seeding Status Updated."
+        else
+          puts "Error: Unable to save Seeding Status to server: #{response.body}"
+          raise "Unable to save Seeding Status to server: #{response.body}"
         end
       end
 
       def update_seeding_done_status
-        if save
-          response = seeding_update(
-            job_id: job_id,
-            seeding_status: :done)
+        return unless save
 
-          if response.code == 200
-            puts "Seeding Done."
-          else
-            puts "Error: Unable to save Seeding Done Status to server: #{response.body}"
-            raise "Unable to save Seeding Done Status to server: #{response.body}"
-          end
+        response = seeding_update(
+          job_id: job_id,
+          seeding_status: :done)
+
+        if response.code == 200
+          puts "Seeding Done."
+        else
+          puts "Error: Unable to save Seeding Done Status to server: #{response.body}"
+          raise "Unable to save Seeding Done Status to server: #{response.body}"
         end
       end
 

@@ -52,34 +52,34 @@ module AnswersEngine
       end
 
       def update_parsing_starting_status
-        if save
-          response = parsing_update(
-            job_id: job_id,
-            gid: gid,
-            parsing_status: :starting)
+        return unless save
 
-          if response.code == 200
-            puts "Page Parsing Status Updated."
-          else
-            puts "Error: Unable to save Page Parsing Status to server: #{response.body}"
-            raise "Unable to save Page Parsing Status to server: #{response.body}"
-          end
+        response = parsing_update(
+          job_id: job_id,
+          gid: gid,
+          parsing_status: :starting)
+
+        if response.code == 200
+          puts "Page Parsing Status Updated."
+        else
+          puts "Error: Unable to save Page Parsing Status to server: #{response.body}"
+          raise "Unable to save Page Parsing Status to server: #{response.body}"
         end
       end
 
       def update_parsing_done_status
-        if save
-          response = parsing_update(
-            job_id: job_id,
-            gid: gid,
-            parsing_status: :done)
+        return unless save
 
-          if response.code == 200
-            puts "Page Parsing Done."
-          else
-            puts "Error: Unable to save Page Parsing Done Status to server: #{response.body}"
-            raise "Unable to save Page Parsing Done Status to server: #{response.body}"
-          end
+        response = parsing_update(
+          job_id: job_id,
+          gid: gid,
+          parsing_status: :done)
+
+        if response.code == 200
+          puts "Page Parsing Done."
+        else
+          puts "Error: Unable to save Page Parsing Done Status to server: #{response.body}"
+          raise "Unable to save Page Parsing Done Status to server: #{response.body}"
         end
       end
 
@@ -112,22 +112,8 @@ module AnswersEngine
           end
 
           puts "=========== Parsing Executed ==========="
-
-          if save
-            save_pages_and_outputs(pages, outputs, :parsing)
-            update_parsing_done_status
-          end
-
-          unless outputs.empty?
-            puts "----------- Outputs: -----------"
-            puts JSON.pretty_generate(outputs)
-          end
-
-          unless pages.empty?
-            puts "----------- New Pages to Enqueue: -----------"
-            puts JSON.pretty_generate(pages)
-
-          end
+          save_pages_and_outputs(pages, outputs, :parsing)
+          update_parsing_done_status
         end
         proc.call
       end

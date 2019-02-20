@@ -90,8 +90,8 @@ module AnswersEngine
       def get_job_id scraper_name, default = nil
         return default if scraper_name.nil?
         job = Client::ScraperJob.new().find(scraper_name)
-        raise JSON.pretty_generate(job) if job['job_id'].nil?
-        job['job_id']
+        raise JSON.pretty_generate(job) if job['id'].nil?
+        job['id']
       end
 
       # Find outputs by collection and query with pagination.
@@ -152,11 +152,10 @@ module AnswersEngine
         client = Client::JobOutput.new(options)
         response = client.all(query_job_id, collection)
 
-        if response.code == 200 && response.body != 'null'
-          response
-        else
-          []
+        if response.code != 200
+          raise "response_code: #{response.code}|#{response.parsed_response}"
         end
+        (response.body != 'null') ? response.parsed_response : []
       end
 
       # Find one output by collection and query with pagination.
@@ -203,12 +202,23 @@ module AnswersEngine
           log_msgs = []
           unless pages_slice.empty?
             log_msgs << "#{pages_slice.count} out of #{total_pages} Pages"
+            unless save
+              puts '----------------------------------------'
+              puts "Would have save #{log_msgs.last}"
+              puts JSON.pretty_generate pages_slice
+            end
           end
 
           unless outputs_slice.empty?
             log_msgs << "#{outputs_slice.count} out of #{total_outputs} Outputs"
+            unless save
+              puts '----------------------------------------'
+              puts "Would have save #{log_msgs.last}"
+              puts JSON.pretty_generate outputs_slice
+            end
           end
 
+          next unless save
           log_msg = "Saving #{log_msgs.join(' and ')}."
           puts "#{log_msg}"
 
@@ -254,11 +264,6 @@ module AnswersEngine
       #
       # @note IMPORTANT: +pages+ array's elements will be removed.
       def save_pages(pages=[])
-        unless save
-          # Clear outputs as save would have do
-          pages.clear
-          return
-        end
         save_pages_and_outputs(pages, [], save_type)
       end
 
@@ -269,11 +274,6 @@ module AnswersEngine
       #
       # @note IMPORTANT: +outputs+ array's elements will be removed.
       def save_outputs(outputs=[])
-        unless save
-          # Clear outputs as save would have do
-          outputs.clear
-          return
-        end
         save_pages_and_outputs([], outputs, save_type)
       end
 
