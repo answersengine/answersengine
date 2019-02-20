@@ -204,7 +204,7 @@ module AnswersEngine
             log_msgs << "#{pages_slice.count} out of #{total_pages} Pages"
             unless save
               puts '----------------------------------------'
-              puts "Would have save #{log_msgs.last}"
+              puts "Would have saved #{log_msgs.last}"
               puts JSON.pretty_generate pages_slice
             end
           end
@@ -213,7 +213,7 @@ module AnswersEngine
             log_msgs << "#{outputs_slice.count} out of #{total_outputs} Outputs"
             unless save
               puts '----------------------------------------'
-              puts "Would have save #{log_msgs.last}"
+              puts "Would have saved #{log_msgs.last}"
               puts JSON.pretty_generate outputs_slice
             end
           end
