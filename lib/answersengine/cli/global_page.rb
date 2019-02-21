@@ -8,12 +8,6 @@ module AnswersEngine
         puts "#{client.find(gid)}"
       end
 
-      desc "refetch <gid>", "Force Refetch a global page"
-      def refetch(gid)
-        client = Client::GlobalPage.new(options)
-        puts "#{client.refetch(gid)}"
-      end
-
       desc "content <gid>", "Show content of a globalpage"
       def content(gid)
         client = Client::GlobalPage.new(options)

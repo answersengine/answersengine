@@ -5,10 +5,6 @@ module AnswersEngine
         self.class.get("/global_pages/#{gid}", @options)
       end
 
-      def refetch(gid)
-        self.class.put("/global_pages/#{gid}/refetch", @options)
-      end
-
       def find_content(gid)
         self.class.get("/global_pages/#{gid}/content", @options)
       end
