@@ -96,6 +96,22 @@ module AnswersEngine
         end
       end 
 
+      desc "refetch <scraper_name>", "Refetch Pages on a scraper's current job"
+      long_desc <<-LONGDESC
+        Refetch pages in a scraper's current job. You need to specify either a --gid or --fetch-fail or --parse-fail.\x5
+      LONGDESC
+      option :gid, :aliases => :g, type: :string, desc: 'Refetch a specific GID'
+      option :fetch_fail, type: :boolean, desc: 'Refetches only pages that fails fetching.'
+      option :parse_fail, type: :boolean, desc: 'Refetches only pages that fails parsing.'
+      def refetch(scraper_name)
+        if !options.key?(:gid) && !options.key?(:fetch_fail) && !options.key?(:parse_fail)
+          puts "Must specify either a --gid or --fetch-fail or --parse-fail"
+        else
+          client = Client::ScraperJobPage.new(options)
+          puts "#{client.refetch(scraper_name)}"
+        end
+      end
+
       desc "reset <scraper_name> <gid>", "Reset fetching and parsing of a page in a scraper's current job"
       long_desc <<-LONGDESC
           Reset fetching and parsing of a page in a scraper's current job.\x5

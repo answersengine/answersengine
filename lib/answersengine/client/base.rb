@@ -31,6 +31,7 @@ module AnswersEngine
         query[:fetchfail] = opts[:fetch_fail] if opts[:fetch_fail]
         query[:parsefail] = opts[:parse_fail] if opts[:parse_fail]
         query[:page_type] = opts[:page_type] if opts[:page_type]
+        query[:gid] = opts[:gid] if opts[:gid]
 
         if opts[:query]
           if opts[:query].is_a?(Hash)
