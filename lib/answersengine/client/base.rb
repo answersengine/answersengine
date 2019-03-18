@@ -4,10 +4,13 @@ module AnswersEngine
   module Client
     class Base
       include HTTParty
-      base_uri(ENV['ANSWERSENGINE_API_URL'].nil? ? 'https://fetch.answersengine.com/api/v1' : ENV['ANSWERSENGINE_API_URL'])
 
       def self.env_auth_token
         ENV['ANSWERSENGINE_TOKEN']
+      end
+
+      def env_api_url
+        ENV['ANSWERSENGINE_API_URL'].nil? ? 'https://fetch.answersengine.com/api/v1' : ENV['ANSWERSENGINE_API_URL']
       end
 
       def auth_token
@@ -19,6 +22,7 @@ module AnswersEngine
       end
 
       def initialize(opts={})
+        self.class.base_uri(env_api_url)
         self.auth_token = opts[:auth_token] unless opts[:auth_token].nil?
         @options = { headers: {
           "Authorization" => "Bearer #{auth_token}",
