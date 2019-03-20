@@ -19,6 +19,15 @@ module AnswersEngine
         self.class.post("/auth_tokens", @options)
       end
 
+      def create_on_account(account_id, role, description)
+        body = {
+            role: role,
+            description: description}
+
+        @options.merge!({body: body.to_json})
+        self.class.post("/accounts/#{account_id}/auth_tokens", @options)
+      end
+
       def update(token, role, description="", opts={})
         body = {}
 
