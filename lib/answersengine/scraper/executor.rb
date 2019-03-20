@@ -201,13 +201,17 @@ module AnswersEngine
       def remove_old_dups!(list, key_defaults)
         raw_count = list.count
         keys = key_defaults.keys
+        force_uniq = 0
         list.reverse!.uniq! do |item|
           # Extract stringify keys as hash
           key_hash = Hash[item.map{|k,v|keys.include?(k.to_s) ? [k.to_s,v] : nil}.select{|i|!i.nil?}]
 
           # Apply defaults for uniq validation
           key_defaults.each{|k,v| key_hash[k] = v if key_hash[k].nil?}
-          key_hash
+
+          # Don't dedup nil key defaults
+          skip_dedup = !keys.find{|k| key_hash[k].nil?}.nil?
+          skip_dedup ? (force_uniq += 1) : key_hash
         end
         list.reverse!
         dup_count = raw_count - list.count
@@ -223,11 +227,10 @@ module AnswersEngine
       # @note It will not dedup for now as it is hard to build gid.
       #   TODO: Build gid so we can dedup
       def remove_old_page_dups!(list)
-        # key_defaults = {
-        #   'gid' => nil
-        # }
-        # remove_old_dups! list, key_defaults
-        0
+        key_defaults = {
+          'gid' => nil
+        }
+        remove_old_dups! list, key_defaults
       end
 
       # Remove dups by prioritizing the latest dup.

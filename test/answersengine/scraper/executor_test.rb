@@ -65,7 +65,7 @@ describe 'executor' do
             'yyy' => 'zzz'
           }
         ]
-        key_defaults = {'aaa' => nil}
+        key_defaults = {'aaa' =>  'DDD'}
         dup_count = @executor.remove_old_dups! list, key_defaults
         expected = [
           {
@@ -117,7 +117,7 @@ describe 'executor' do
             'yyy' => 'zzz'
           }
         ]
-        key_defaults = {'aaa' => nil}
+        key_defaults = {'aaa' => 'CCC'}
         dup_count = @executor.remove_old_dups! list, key_defaults
         expected = 3
         assert_equal expected, dup_count
@@ -170,6 +170,59 @@ describe 'executor' do
         assert_equal expected, list
       end
 
+      it 'should not dedup on nil defaults' do
+        list = [
+          {
+            bbb: 'BBB',
+            'ccc' => 'CCC',
+            'eee' => 'EEE'
+          }, {
+            'bbb' => '222',
+            'ccc' => '333'
+          }, {
+            aaa: 'AAA',
+            'bbb' => 'B2',
+            'hhh' => 'H3',
+            'mmm' => 'M9'
+          }, {
+            'aaa': 'AAA',
+            'bbb' => 'B2',
+            'ccc' => 'C3',
+            'fff' => 'F7'
+          }, {
+            'bbb' => '2B'
+          }, {
+            'bbb' => 'bbb',
+            'ggg' => '555',
+            'yyy' => 'zzz'
+          }
+        ]
+        key_defaults = {'aaa' => nil}
+        dup_count = @executor.remove_old_dups! list, key_defaults
+        expected = [
+          {
+            bbb: 'BBB',
+            'ccc' => 'CCC',
+            'eee' => 'EEE'
+          }, {
+            'bbb' => '222',
+            'ccc' => '333'
+          }, {
+            'aaa': 'AAA',
+            'bbb' => 'B2',
+            'ccc' => 'C3',
+            'fff' => 'F7'
+          }, {
+            'bbb' => '2B'
+          }, {
+            'bbb' => 'bbb',
+            'ggg' => '555',
+            'yyy' => 'zzz'
+          }
+        ]
+        assert_equal expected, list
+      end
+
       it 'should dedup outputs' do
         outputs = []
         outputs << {
@@ -211,26 +264,69 @@ describe 'executor' do
         assert_equal expected, outputs
       end
 
-      # # TODO: Decomment this test once gid dedup is implemented.
-      # it 'should dedup pages' do
-      #   pages = []
-      #   pages << {
-      #     'gid' => 'aaa',
-      #     'url' => 'https://example.com/aaa'
-      #   }
-      #   pages << {
-      #     'gid' => 'aaa',
-      #     'url' => 'https://example.com/bbb'
-      #   }
-      #   dup_count = @executor.remove_old_page_dups! pages
-      #   expected = [
-      #     {
-      #       'gid' => 'aaa',
-      #       'url' => 'https://example.com/bbb'
-      #     }
-      #   ]
-      #   assert_equal expected, pages
-      # end
+      it 'should not dedup outputs without id' do
+        outputs = []
+        outputs << {
+          '_collection' => 'my_collection',
+          'name' => 'ABC'
+        }
+        outputs << {
+          _collection: 'my_collection',
+          'name' => 'DEF'
+        }
+        outputs << {
+          '_id' => 'aaa',
+          '_collection' => 'my_collection',
+          'name' => 'FFF'
+        }
+        outputs << {
+          '_id' => 'aaa',
+          '_collection' => 'my_collection',
+          'name' => 'LLL'
+        }
+        outputs << {
+          '_collection' => 'my_collection',
+          'name' => 'GGG'
+        }
+        dup_count = @executor.remove_old_output_dups! outputs
+        expected = [
+          {
+            '_collection' => 'my_collection',
+            'name' => 'ABC'
+          }, {
+            _collection: 'my_collection',
+            'name' => 'DEF'
+          }, {
+            '_id' => 'aaa',
+            '_collection' => 'my_collection',
+            'name' => 'LLL'
+          }, {
+            '_collection' => 'my_collection',
+            'name' => 'GGG'
+          }
+        ]
+        assert_equal expected, outputs
+      end
+
+      it 'should dedup pages' do
+        pages = []
+        pages << {
+          'gid' => 'aaa',
+          'url' => 'https://example.com/aaa'
+        }
+        pages << {
+          'gid' => 'aaa',
+          'url' => 'https://example.com/bbb'
+        }
+        dup_count = @executor.remove_old_page_dups! pages
+        expected = [
+          {
+            'gid' => 'aaa',
+            'url' => 'https://example.com/bbb'
+          }
+        ]
+        assert_equal expected, pages
+      end
 
       it 'should not dedup uniq pages' do
         pages = []

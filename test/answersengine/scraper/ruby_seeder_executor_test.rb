@@ -25,10 +25,13 @@ describe 'ruby_seeder_executor' do
         define_method(:__mock_set_test_result){|result|@__mock_test_result = result}
         define_method(:__mock_test_result){@__mock_test_result}
         define_method(:seeding_update) do |opts|
-          @__mock_test_result = opts.merge!(
+          @__mock_test_result ||= []
+          @__mock_test_result << opts.merge!(
             find_output_args: @__mock_find_output_args,
             find_outputs_args: @__mock_find_outputs_args
           )
+          @__mock_find_output_args = nil
+          @__mock_find_outputs_args = nil
           object = Object.new
           class << object
             define_method(:code){200}
@@ -45,31 +48,31 @@ describe 'ruby_seeder_executor' do
     end
 
     it "should save outputs from script" do
-      @executor.eval_seeder_script true
+      @executor.exec_seeder true
       data = @executor.__mock_test_result
       expected = [{'gid' => '123', 'output' => 'Success!'}]
-      assert_equal expected, data[:outputs]
+      assert_equal expected, data[1][:outputs]
     end
 
     it "should save pages from script" do
-      @executor.eval_seeder_script true
+      @executor.exec_seeder true
       data = @executor.__mock_test_result
       expected = [{'gid' => '123', 'page' => 'Success!'}]
-      assert_equal expected, data[:pages]
+      assert_equal expected, data[1][:pages]
     end
 
     it "should execute find_output from script" do
-      @executor.eval_seeder_script true
+      @executor.exec_seeder true
       data = @executor.__mock_test_result
       expected = ['collectionA', {'_id' => 'outputA'}]
-      assert_equal expected, data[:find_output_args]
+      assert_equal expected, data[1][:find_output_args]
     end
 
     it "should execute find_outputs from script" do
-      @executor.eval_seeder_script true
+      @executor.exec_seeder true
       data = @executor.__mock_test_result
       expected = ['collectionB', {'_id' => 'outputB'}]
-      assert_equal expected, data[:find_outputs_args]
+      assert_equal expected, data[1][:find_outputs_args]
     end
 
     it "should eval without class context" do
@@ -114,7 +117,7 @@ describe 'ruby_seeder_executor' do
 
         # Test stuff
         executor.__mock_set_test_result 'FAIL'
-        executor.eval_seeder_script false
+        executor.exec_seeder false
         data = executor.__mock_test_result
       ensure
         library_script.unlink unless library_script.nil?
