@@ -191,29 +191,85 @@ module AnswersEngine
         result.respond_to?(:first) ? result.first : nil
       end
 
+      # Remove dups by prioritizing the latest dup.
+      #
+      # @param [Array] list List of hashes to dedup.
+      # @param [Hash] key_defaults Key and default value pair hash to use on
+      #   uniq validation.
+      #
+      # @return [Integer] Removed duplicated items count.
+      def remove_old_dups!(list, key_defaults)
+        raw_count = list.count
+        keys = key_defaults.keys
+        list.reverse!.uniq! do |item|
+          # Extract stringify keys as hash
+          key_hash = Hash[item.map{|k,v|keys.include?(k.to_s) ? [k.to_s,v] : nil}.select{|i|!i.nil?}]
+
+          # Apply defaults for uniq validation
+          key_defaults.each{|k,v| key_hash[k] = v if key_hash[k].nil?}
+          key_hash
+        end
+        list.reverse!
+        dup_count = raw_count - list.count
+        dup_count
+      end
+
+      # Remove page dups by prioritizing the latest dup.
+      #
+      # @param [Array] list List of pages to dedup.
+      #
+      # @return [Integer] Removed duplicated items count.
+      #
+      # @note It will not dedup for now as it is hard to build gid.
+      #   TODO: Build gid so we can dedup
+      def remove_old_page_dups!(list)
+        # key_defaults = {
+        #   'gid' => nil
+        # }
+        # remove_old_dups! list, key_defaults
+        0
+      end
+
+      # Remove dups by prioritizing the latest dup.
+      #
+      # @param [Array] list List of outputs to dedup.
+      #
+      # @return [Integer] Removed duplicated items count.
+      def remove_old_output_dups!(list)
+        key_defaults = {
+          '_id' => nil,
+          '_collection' => 'default'
+        }
+        remove_old_dups! list, key_defaults
+      end
+
       def save_pages_and_outputs(pages = [], outputs = [], status)
         total_pages = pages.count
         total_outputs = outputs.count
         records_per_slice = 100
         until pages.empty? && outputs.empty?
           pages_slice = pages.shift(records_per_slice)
+          pages_dup_count = remove_old_page_dups! pages_slice
           outputs_slice = outputs.shift(records_per_slice)
+          outputs_dup_count = remove_old_output_dups! outputs_slice
 
           log_msgs = []
           unless pages_slice.empty?
-            log_msgs << "#{pages_slice.count} out of #{total_pages} Pages"
+            page_dups_ignored = pages_dup_count > 0 ? " (#{pages_dup_count} dups ignored)" : ''
+            log_msgs << "#{pages_slice.count} out of #{total_pages} Pages#{page_dups_ignored}"
             unless save
               puts '----------------------------------------'
-              puts "Would have saved #{log_msgs.last}"
+              puts "Would have saved #{log_msgs.last}#{page_dups_ignored}"
               puts JSON.pretty_generate pages_slice
             end
           end
 
           unless outputs_slice.empty?
-            log_msgs << "#{outputs_slice.count} out of #{total_outputs} Outputs"
+            output_dups_ignored = outputs_dup_count > 0 ? " (#{outputs_dup_count} dups ignored)" : ''
+            log_msgs << "#{outputs_slice.count} out of #{total_outputs} Outputs#{output_dups_ignored}"
             unless save
               puts '----------------------------------------'
-              puts "Would have saved #{log_msgs.last}"
+              puts "Would have saved #{log_msgs.last}#{output_dups_ignored}"
               puts JSON.pretty_generate outputs_slice
             end
           end
@@ -279,7 +335,7 @@ module AnswersEngine
 
       # Eval a filename with a custom binding
       #
-      # @param [String] filename File path to read.
+      # @param [String] file_path File path to read.
       # @param [Binding] context Context binding to evaluate with.
       #
       # @note Using this method will allow scripts to contain `return` to
