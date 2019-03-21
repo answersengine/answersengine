@@ -1,5 +1,6 @@
 require "answersengine/client/base"
 require "answersengine/client/auth_token"
+require "answersengine/client/deploy_key"
 require 'answersengine/client/export'
 require "answersengine/client/scraper"
 require "answersengine/client/scraper_deployment"
