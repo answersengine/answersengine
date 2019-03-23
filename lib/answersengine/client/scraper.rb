@@ -48,6 +48,10 @@ module AnswersEngine
 
         self.class.put("/scrapers/#{scraper_name}", @options)
       end
+
+      def delete(scraper_name, opts={})
+        self.class.delete("/scrapers/#{scraper_name}", @options)
+      end
     end
   end
 end

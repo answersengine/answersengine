@@ -63,6 +63,13 @@ module AnswersEngine
         puts "#{client.find(scraper_name)}"
       end
 
+      desc "delete <scraper_name>", "Delete a scraper and related records"
+      def delete(scraper_name)
+        client = Client::Scraper.new(options)
+        puts "#{client.delete(scraper_name)}"
+      end
+
+
       desc "deploy <scraper_name>", "Deploy a scraper"
       long_desc <<-LONGDESC
           Deploys a scraper
