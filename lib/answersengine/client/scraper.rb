@@ -13,7 +13,7 @@ module AnswersEngine
       def create(scraper_name, git_repository, opts={})
         body = {}
         body[:name] = scraper_name
-        body[:git_repository] = git_repository,
+        body[:git_repository] = git_repository
         body[:git_branch] = opts[:branch] || opts[:git_branch] || "master" if opts[:branch] || opts[:git_branch]
         body[:freshness_type] = opts[:freshness_type] if opts[:freshness_type]
         body[:force_fetch] = opts[:force_fetch] if opts[:force_fetch]
