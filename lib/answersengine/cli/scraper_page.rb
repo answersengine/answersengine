@@ -94,7 +94,7 @@ module AnswersEngine
             puts "Error: #{options[:vars]} on vars is not a valid JSON"
           end
         end
-      end 
+      end
 
       desc "refetch <scraper_name>", "Refetch Pages on a scraper's current job"
       long_desc <<-LONGDESC
@@ -106,35 +106,36 @@ module AnswersEngine
       def refetch(scraper_name)
         if !options.key?(:gid) && !options.key?(:fetch_fail) && !options.key?(:parse_fail)
           puts "Must specify either a --gid or --fetch-fail or --parse-fail"
-        else
-          client = Client::ScraperJobPage.new(options)
-          puts "#{client.refetch(scraper_name)}"
+          return
         end
+        client = Client::ScraperJobPage.new(options)
+        puts "#{client.refetch(scraper_name)}"
       end
 
-      desc "reset <scraper_name> <gid>", "Reset fetching and parsing of a page in a scraper's current job"
+      desc "reparse <scraper_name>", "Reparse Pages on a scraper's current job"
       long_desc <<-LONGDESC
-          Reset fetching and parsing of a page in a scraper's current job.\x5
-          LONGDESC
-      option :job, :aliases => :j, type: :numeric, desc: 'Set a specific job ID'
-      def reset(scraper_name, gid)
+        Reparse pages in a scraper's current job. You need to specify either a --gid or --parse-fail.\x5
+      LONGDESC
+      option :gid, :aliases => :g, type: :string, desc: 'Reparse a specific GID'
+      option :parse_fail, type: :boolean, desc: 'Reparse only pages that fails parsing.'
+      def reparse(scraper_name)
         begin
           options[:vars] = JSON.parse(options[:vars]) if options[:vars]
 
-          if options[:job]
-            client = Client::JobPage.new(options)
-            puts "#{client.reset(options[:job], gid, options)}"
-          else
-            client = Client::ScraperJobPage.new(options)
-            puts "#{client.reset(scraper_name, gid, options)}"
+          if !options.key?(:gid) && !options.key?(:parse_fail)
+            puts "Must specify either a --gid or --parse-fail"
+            return
           end
+
+          client = Client::ScraperJobPage.new(options)
+          puts "#{client.reparse(scraper_name)}"
 
         rescue JSON::ParserError
           if options[:vars]
             puts "Error: #{options[:vars]} on vars is not a valid JSON"
           end
         end
-      end 
+      end
 
       desc "show <scraper_name> <gid>", "Show a page in scraper's current job"
       long_desc <<-LONGDESC
@@ -166,7 +167,7 @@ module AnswersEngine
         query = {}
         query["order"] = options.delete(:head) if options[:head]
         query["job_type"] = "parsing" if options[:parsing]
-        
+
         query["page_token"] = options.delete(:more) if options[:more]
         query["per_page"] = options.delete(:per_page) if options[:per_page]
 
@@ -177,7 +178,7 @@ module AnswersEngine
         else
           result = client.scraper_all_job_page_log(scraper_name, gid, {query: query})
         end
-        
+
         if result['entries'].nil? || result["entries"].length == 0
           puts "No logs yet, please try again later."
         else

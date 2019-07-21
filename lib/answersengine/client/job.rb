@@ -40,7 +40,7 @@ module AnswersEngine
         body[:pages] = opts.fetch(:pages) {[]}
         body[:seeding_status] = opts.fetch(:seeding_status){ nil }
         body[:log_error] = opts[:log_error] if opts[:log_error]
-        
+
         @options.merge!({body: body.to_json})
 
         self.class.put("/jobs/#{job_id}/seeding_update", @options)
@@ -50,4 +50,3 @@ module AnswersEngine
 
   end
 end
-
