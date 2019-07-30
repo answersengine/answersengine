@@ -99,7 +99,7 @@ module AnswersEngine
       # @param [String] collection ('default') Collection name.
       # @param [Hash] query ({}) Filters to query.
       # @param [Integer] page (1) Page number.
-      # @param [Integer] per_page (30) Page size.
+      # @param [Integer] per_page (100) Page size.
       # @param [Hash] opts ({}) Configuration options.
       # @option opts [String|nil] :scraper_name (nil) Scraper name to query
       #   from.
@@ -121,16 +121,16 @@ module AnswersEngine
       # @example
       #   find_outputs 'my_collection', {}, 1
       # @example
-      #   find_outputs 'my_collection', {}, 1, 30
+      #   find_outputs 'my_collection', {}, 1, 100
       # @example Find from another scraper by name
-      #   find_outputs 'my_collection', {}, 1, 30, scraper_name: 'my_scraper'
+      #   find_outputs 'my_collection', {}, 1, 100, scraper_name: 'my_scraper'
       # @example Find from another scraper by job_id
-      #   find_outputs 'my_collection', {}, 1, 30, job_id: 123
+      #   find_outputs 'my_collection', {}, 1, 100, job_id: 123
       #
       # @note *opts `:job_id` option is prioritize over `:scraper_name` when
       #   both exists. If none add provided or nil values, then current job
       #   will be used to query instead, this is the defaul behavior.
-      def find_outputs(collection='default', query={}, page=1, per_page=30, opts = {})
+      def find_outputs(collection='default', query={}, page=1, per_page=100, opts = {})
         # Validate parameters out from nil for easier user usage.
         raise ArgumentError.new("collection needs to be a String") unless collection.is_a?(String)
         raise ArgumentError.new("query needs to be a Hash, instead of: #{query}") unless query.is_a?(Hash)
