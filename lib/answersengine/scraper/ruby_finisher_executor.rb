@@ -56,7 +56,7 @@ module AnswersEngine
       end
 
       def save_type
-        :finisher
+        :executing
       end
 
       def update_to_server(opts = {})
