@@ -6,7 +6,8 @@ module AnswersEngine
       end
 
       def all(scraper_name, opts={})
-        self.class.get("/scrapers/#{scraper_name}/current_job/pages", @options)
+        params = @options.merge(opts)
+        self.class.get("/scrapers/#{scraper_name}/current_job/pages", params)
       end
 
       def update(scraper_name, gid, opts={})
@@ -15,19 +16,19 @@ module AnswersEngine
         body[:priority] = opts[:priority] if opts[:priority]
         body[:vars] = opts[:vars] if opts[:vars]
 
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.put("/scrapers/#{scraper_name}/current_job/pages/#{gid}", @options)
+        self.class.put("/scrapers/#{scraper_name}/current_job/pages/#{gid}", params)
       end
 
-      def refetch(scraper_name, opts = nil)
-        opts ||= @options
-        self.class.put("/scrapers/#{scraper_name}/current_job/pages/refetch", opts)
+      def refetch(scraper_name, opts={})
+        params = @options.merge(opts)
+        self.class.put("/scrapers/#{scraper_name}/current_job/pages/refetch", params)
       end
 
-      def reparse(scraper_name, opts = nil)
-        opts ||= @options
-        self.class.put("/scrapers/#{scraper_name}/current_job/pages/reparse", opts)
+      def reparse(scraper_name, opts={})
+        params = @options.merge(opts)
+        self.class.put("/scrapers/#{scraper_name}/current_job/pages/reparse", params)
       end
 
       def enqueue(scraper_name, method, url, opts={})
@@ -46,9 +47,9 @@ module AnswersEngine
         body[:no_redirect] = opts[:no_redirect] if opts[:no_redirect]
         body[:cookie] = opts[:cookie] if opts[:cookie]
 
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.post("/scrapers/#{scraper_name}/current_job/pages", @options)
+        self.class.post("/scrapers/#{scraper_name}/current_job/pages", params)
       end
 
     end

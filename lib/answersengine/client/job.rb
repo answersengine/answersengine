@@ -2,7 +2,8 @@ module AnswersEngine
   module Client
     class Job < AnswersEngine::Client::Base
       def all(opts={})
-        self.class.get("/jobs", @options)
+        params = @options.merge(opts)
+        self.class.get("/jobs", params)
       end
 
       def find(job_id)
@@ -14,9 +15,9 @@ module AnswersEngine
         body[:status] = opts[:status] if opts[:status]
         body[:standard_worker_count] = opts[:workers] if opts[:workers]
         body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.put("/jobs/#{job_id}", @options)
+        self.class.put("/jobs/#{job_id}", params)
       end
 
       def cancel(job_id, opts={})
@@ -41,9 +42,20 @@ module AnswersEngine
         body[:seeding_status] = opts.fetch(:seeding_status){ nil }
         body[:log_error] = opts[:log_error] if opts[:log_error]
 
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.put("/jobs/#{job_id}/seeding_update", @options)
+        self.class.put("/jobs/#{job_id}/seeding_update", params)
+      end
+
+      def finisher_update(job_id, opts={})
+        body = {}
+        body[:outputs] = opts.fetch(:outputs) {[]}
+        body[:finisher_status] = opts.fetch(:finisher_status){ nil }
+        body[:log_error] = opts[:log_error] if opts[:log_error]
+
+        params = @options.merge({body: body.to_json})
+
+        self.class.put("/jobs/#{job_id}/finisher_update", params)
       end
 
     end

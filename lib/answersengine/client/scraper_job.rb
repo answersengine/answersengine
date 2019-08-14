@@ -2,7 +2,8 @@ module AnswersEngine
   module Client
     class ScraperJob < AnswersEngine::Client::Base
       def all(scraper_name, opts={})
-        self.class.get("/scrapers/#{scraper_name}/jobs", @options)
+        params = @options.merge(opts)
+        self.class.get("/scrapers/#{scraper_name}/jobs", params)
       end
 
       def create(scraper_name, opts={})
@@ -10,8 +11,8 @@ module AnswersEngine
         body[:standard_worker_count] = opts[:workers] if opts[:workers]
         body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
-        @options.merge!({body: body.to_json})
-        self.class.post("/scrapers/#{scraper_name}/jobs", @options)
+        params = @options.merge({body: body.to_json})
+        self.class.post("/scrapers/#{scraper_name}/jobs", params)
       end
 
       def find(scraper_name)
@@ -24,9 +25,9 @@ module AnswersEngine
         body[:standard_worker_count] = opts[:workers] if opts[:workers]
         body[:browser_worker_count] = opts[:browsers] if opts[:browsers]
         body[:proxy_type] = opts[:proxy_type] if opts[:proxy_type]
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.put("/scrapers/#{scraper_name}/current_job", @options)
+        self.class.put("/scrapers/#{scraper_name}/current_job", params)
       end
 
       def cancel(scraper_name, opts={})
@@ -46,4 +47,3 @@ module AnswersEngine
     end
   end
 end
-

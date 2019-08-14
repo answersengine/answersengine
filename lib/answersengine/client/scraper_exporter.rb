@@ -2,7 +2,8 @@ module AnswersEngine
   module Client
     class ScraperExporter < AnswersEngine::Client::Base
       def all(scraper_name, opts={})
-        self.class.get("/scrapers/#{scraper_name}/exporters", @options)
+        params = @options.merge(opts)
+        self.class.get("/scrapers/#{scraper_name}/exporters", params)
       end
 
       def find(scraper_name, exporter_name)
@@ -11,4 +12,3 @@ module AnswersEngine
     end
   end
 end
-

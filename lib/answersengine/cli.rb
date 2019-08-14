@@ -11,6 +11,7 @@ require 'answersengine/cli/scraper_deployment'
 require 'answersengine/cli/scraper'
 require 'answersengine/cli/parser'
 require 'answersengine/cli/seeder'
+require 'answersengine/cli/finisher'
 
 
 module AnswersEngine
@@ -29,5 +30,8 @@ module AnswersEngine
 
     desc "seeder SUBCOMMAND ...ARGS", "for seeding related activities"
     subcommand "seeder", Seeder
+
+    desc "seeder SUBCOMMAND ...ARGS", "for seeding related activities"
+    subcommand "finisher", Finisher
   end
 end

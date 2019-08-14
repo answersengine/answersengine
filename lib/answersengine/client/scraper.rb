@@ -7,7 +7,8 @@ module AnswersEngine
       end
 
       def all(opts={})
-        self.class.get("/scrapers", @options)
+        params = @options.merge opts
+        self.class.get("/scrapers", params)
       end
 
       def create(scraper_name, git_repository, opts={})
@@ -24,8 +25,8 @@ module AnswersEngine
         body[:cancel_current_job] = opts[:cancel_current_job] if opts[:cancel_current_job]
         body[:schedule] = opts[:schedule] if opts[:schedule]
         body[:timezone] = opts[:timezone] if opts[:timezone]
-        @options.merge!({body: body.to_json})
-        self.class.post("/scrapers", @options)
+        params = @options.merge({body: body.to_json})
+        self.class.post("/scrapers", params)
       end
 
       def update(scraper_name, opts={})
@@ -42,15 +43,15 @@ module AnswersEngine
         body[:cancel_current_job] = opts[:cancel_current_job] if opts.has_key?("cancel_current_job") || opts.has_key?(:cancel_current_job)
         body[:schedule] = opts[:schedule] if opts[:schedule]
         body[:timezone] = opts[:timezone] if opts[:timezone]
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.put("/scrapers/#{scraper_name}", @options)
+        self.class.put("/scrapers/#{scraper_name}", params)
       end
 
       def delete(scraper_name, opts={})
-        self.class.delete("/scrapers/#{scraper_name}", @options)
+        params = @options.merge(opts)
+        self.class.delete("/scrapers/#{scraper_name}", params)
       end
     end
   end
 end
-

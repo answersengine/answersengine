@@ -7,7 +7,8 @@ module AnswersEngine
       end
 
       def all(opts={})
-        self.class.get("/auth_tokens", @options)
+        params = @options.merge(opts)
+        self.class.get("/auth_tokens", params)
       end
 
       def create(role, description, opts={})
@@ -15,8 +16,8 @@ module AnswersEngine
             role: role,
             description: description}
 
-        @options.merge!({body: body.to_json})
-        self.class.post("/auth_tokens", @options)
+        params = @options.merge({body: body.to_json})
+        self.class.post("/auth_tokens", params)
       end
 
       def create_on_account(account_id, role, description)
@@ -24,8 +25,8 @@ module AnswersEngine
             role: role,
             description: description}
 
-        @options.merge!({body: body.to_json})
-        self.class.post("/accounts/#{account_id}/auth_tokens", @options)
+        params = @options.merge({body: body.to_json})
+        self.class.post("/accounts/#{account_id}/auth_tokens", params)
       end
 
       def update(token, role, description="", opts={})
@@ -33,18 +34,17 @@ module AnswersEngine
 
         body[:role] = role
         body[:description] = description if description.present?
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.put("/auth_tokens/#{token}", @options)
+        self.class.put("/auth_tokens/#{token}", params)
       end
 
       def delete(token, opts={})
         body = {}
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.delete("/auth_tokens/#{token}", @options)
+        self.class.delete("/auth_tokens/#{token}", params)
       end
     end
   end
 end
-

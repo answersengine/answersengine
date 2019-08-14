@@ -51,6 +51,13 @@ module AnswersEngine
         client.seeding_update(job_id, options)
       end
 
+      def finisher_update(options={})
+        client = Client::Job.new()
+        job_id = options.fetch(:job_id)
+
+        client.finisher_update(job_id, options)
+      end
+
       def init_global_page()
         client = Client::GlobalPage.new()
         client.find(gid)

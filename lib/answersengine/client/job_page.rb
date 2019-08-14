@@ -6,7 +6,8 @@ module AnswersEngine
       end
 
       def all(job_id, opts={})
-        self.class.get("/jobs/#{job_id}/pages", @options)
+        params = @options.merge(opts)
+        self.class.get("/jobs/#{job_id}/pages", params)
       end
 
       def update(job_id, gid, opts={})
@@ -15,9 +16,9 @@ module AnswersEngine
         body[:priority] = opts[:priority] if opts[:priority]
         body[:vars] = opts[:vars] if opts[:vars]
 
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.put("/jobs/#{job_id}/pages/#{gid}", @options)
+        self.class.put("/jobs/#{job_id}/pages/#{gid}", params)
       end
 
       def enqueue(job_id, method, url, opts={})
@@ -36,9 +37,9 @@ module AnswersEngine
         body[:no_redirect] = opts[:no_redirect] if opts[:no_redirect]
         body[:cookie] = opts[:cookie] if opts[:cookie]
 
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.post("/jobs/#{job_id}/pages", @options)
+        self.class.post("/jobs/#{job_id}/pages", params)
       end
 
       def parsing_update(job_id, gid, opts={})
@@ -48,9 +49,9 @@ module AnswersEngine
         body[:parsing_status] = opts.fetch(:parsing_status){ nil }
         body[:log_error] = opts[:log_error] if opts[:log_error]
 
-        @options.merge!({body: body.to_json})
+        params = @options.merge({body: body.to_json})
 
-        self.class.put("/jobs/#{job_id}/pages/#{gid}/parsing_update", @options)
+        self.class.put("/jobs/#{job_id}/pages/#{gid}/parsing_update", params)
       end
     end
   end

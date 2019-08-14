@@ -3,17 +3,19 @@ module AnswersEngine
     class DeployKey < AnswersEngine::Client::Base
 
       def find(opts={})
-        self.class.get("/deploy_key", @options)
+        params = @options.merge(opts)
+        self.class.get("/deploy_key", params)
       end
 
       def create(opts={})
-        self.class.post("/deploy_key", @options)
+        params = @options.merge(opts)
+        self.class.post("/deploy_key", params)
       end
 
       def delete(opts={})
-        self.class.delete("/deploy_key", @options)
+        params = @options.merge(opts)
+        self.class.delete("/deploy_key", params)
       end
     end
   end
 end
-
