@@ -20,9 +20,9 @@ module AnswersEngine
       def exec_finisher(save=false)
         @save = save
         if save
-          puts "Executing seeder script"
+          puts "Executing finisher script"
         else
-          puts "Trying seeder script"
+          puts "Trying finisher script"
         end
 
         eval_finisher_script(save)
@@ -36,7 +36,8 @@ module AnswersEngine
 
           begin
             context = isolated_binding({
-              outputs: outputs
+              outputs: outputs,
+              job_id: job_id
             })
             eval_with_context filename, context
           rescue SyntaxError => e
