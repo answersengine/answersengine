@@ -4,7 +4,7 @@ module AnswersEngine
       attr_accessor :save
       # Refetch self page flag.
       # @return [Boollean]
-      # @nore It is stronger than #reparse_self flag.
+      # @note It is stronger than #reparse_self flag.
       attr_accessor :refetch_self
       # Reparse self page flag.
       # @return [Boollean]
