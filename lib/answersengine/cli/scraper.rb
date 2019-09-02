@@ -30,7 +30,7 @@ module AnswersEngine
       option :schedule, type: :string, desc: 'Set the schedule of the scraper to run. Must be in CRON format.'
       option :timezone, type: :string, desc: "Set the scheduler's timezone. Must be in IANA Timezone format. Defaults to \"America/Toronto\""
       def create(scraper_name, git_repository)
-        puts "options #{options}"
+        # puts "options #{options}"
         client = Client::Scraper.new(options)
         puts "#{client.create(scraper_name, git_repository, options)}"
       end

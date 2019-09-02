@@ -17,6 +17,7 @@ require "answersengine/client/job_page"
 require "answersengine/client/job_output"
 require "answersengine/client/job_stat"
 require "answersengine/client/backblaze_content"
+require "answersengine/client/env_var"
 
 
 module AnswersEngine
