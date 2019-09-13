@@ -18,6 +18,8 @@ require "answersengine/client/job_output"
 require "answersengine/client/job_stat"
 require "answersengine/client/backblaze_content"
 require "answersengine/client/env_var"
+require "answersengine/client/scraper_var"
+require "answersengine/client/scraper_job_var"
 
 
 module AnswersEngine

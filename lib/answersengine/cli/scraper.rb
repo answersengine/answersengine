@@ -172,6 +172,9 @@ module AnswersEngine
       desc "exporter SUBCOMMAND ...ARGS", "manage scraper's exporters"
       subcommand "exporter", ScraperExporter
 
+      desc "var SUBCOMMAND ...ARGS", "for managing scraper's variables"
+      subcommand "var", ScraperVar
+
 
     end
   end

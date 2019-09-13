@@ -65,6 +65,10 @@ module AnswersEngine
         puts "#{client.update(scraper_name, options)}"
       end
 
+      desc "var SUBCOMMAND ...ARGS", "for managing scraper's job variables"
+      subcommand "var", ScraperJobVar
+
+
     end
   end
 

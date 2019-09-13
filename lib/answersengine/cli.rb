@@ -1,7 +1,9 @@
 require 'thor'
 require 'answersengine/scraper'
+require 'answersengine/cli/scraper_var'
 require 'answersengine/cli/scraper_exporter'
 require 'answersengine/cli/scraper_export'
+require 'answersengine/cli/scraper_job_var'
 require 'answersengine/cli/scraper_job'
 require 'answersengine/cli/global_page'
 require 'answersengine/cli/scraper_page'
@@ -13,6 +15,7 @@ require 'answersengine/cli/parser'
 require 'answersengine/cli/seeder'
 require 'answersengine/cli/finisher'
 require 'answersengine/cli/env_var'
+
 
 
 module AnswersEngine
