@@ -9,6 +9,7 @@ require "answersengine/client/scraper_job_page"
 require "answersengine/client/scraper_exporter"
 require "answersengine/client/scraper_export"
 require "answersengine/client/scraper_job"
+require "answersengine/client/scraper_finisher"
 require 'answersengine/client/job_export'
 require "answersengine/client/job"
 require "answersengine/client/job_log"

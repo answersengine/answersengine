@@ -2,7 +2,7 @@ module AnswersEngine
   class CLI < Thor
     class Scraper < Thor
       desc "list", "List scrapers"
-      
+
       long_desc <<-LONGDESC
         List all scrapers.
       LONGDESC
@@ -25,8 +25,8 @@ module AnswersEngine
       option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
       option :workers, :aliases => :w, type: :numeric, desc: 'Set how many standard workers to use. Default: 1'
       option :browsers, type: :numeric, desc: 'Set how many browser workers to use. Default: 0'
-      option :disable_scheduler, type: :boolean, desc: 'Set true to disable scheduler. Default: false' 
-      option :cancel_current_job, type: :boolean, desc: 'Set true to cancel currently active job if scheduler starts. Default: false' 
+      option :disable_scheduler, type: :boolean, desc: 'Set true to disable scheduler. Default: false'
+      option :cancel_current_job, type: :boolean, desc: 'Set true to cancel currently active job if scheduler starts. Default: false'
       option :schedule, type: :string, desc: 'Set the schedule of the scraper to run. Must be in CRON format.'
       option :timezone, type: :string, desc: "Set the scheduler's timezone. Must be in IANA Timezone format. Defaults to \"America/Toronto\""
       def create(scraper_name, git_repository)
@@ -47,8 +47,8 @@ module AnswersEngine
       option :force_fetch, :aliases => :f, type: :boolean, desc: 'Set true to force fetch page that is not within freshness criteria. Default: false'
       option :workers, :aliases => :w, type: :numeric, desc: 'Set how many standard workers to use. Default: 1'
       option :browsers, type: :numeric, desc: 'Set how many browser workers to use. Default: 0'
-      option :disable_scheduler, type: :boolean, desc: 'Set true to disable scheduler. Default: false' 
-      option :cancel_current_job, type: :boolean, desc: 'Set true to cancel currently active job if scheduler starts. Default: false' 
+      option :disable_scheduler, type: :boolean, desc: 'Set true to disable scheduler. Default: false'
+      option :cancel_current_job, type: :boolean, desc: 'Set true to cancel currently active job if scheduler starts. Default: false'
       option :schedule, type: :string, desc: 'Set the schedule of the scraper to run. Must be in CRON format.'
       option :timezone, type: :string, desc: "Set the scheduler's timezone. Must be in IANA Timezone format. Defaults to \"America/Toronto\""
       def update(scraper_name)
@@ -159,6 +159,9 @@ module AnswersEngine
 
       desc "deployment SUBCOMMAND ...ARGS", "manage scrapers deployments"
       subcommand "deployment", ScraperDeployment
+
+      desc "finisher SUBCOMMAND ...ARGS", "manage scrapers finishers"
+      subcommand "finisher", ScraperFinisher
 
       desc "output SUBCOMMAND ...ARGS", "view scraper outputs"
       subcommand "output", JobOutput
