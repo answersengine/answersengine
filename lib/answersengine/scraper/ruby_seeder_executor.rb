@@ -52,7 +52,13 @@ module AnswersEngine
           end
 
           puts "=========== Seeding Executed ==========="
-          save_pages_and_outputs(pages, outputs, :seeding)
+          begin
+            save_pages_and_outputs(pages, outputs, :seeding)
+          rescue => e
+            handle_error(e) if save
+            raise e
+          end
+
           update_seeding_done_status
         end
         proc.call

@@ -49,7 +49,13 @@ module AnswersEngine
           end
 
           puts "=========== Finisher Executed ==========="
-          save_outputs(outputs)
+          begin
+            save_outputs(outputs)
+          rescue => e
+            handle_error(e) if save
+            raise e
+          end
+          
           update_finisher_done_status
         end
         proc.call

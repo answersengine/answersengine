@@ -159,7 +159,13 @@ module AnswersEngine
           end
 
           puts "=========== Parsing Executed ==========="
-          save_pages_and_outputs(pages, outputs, :parsing)
+          begin
+            save_pages_and_outputs(pages, outputs, :parsing)
+          rescue => e
+            handle_error(e) if save
+            raise e
+          end
+          
           if refetch_self
             refetch_page gid
           elsif reparse_self
