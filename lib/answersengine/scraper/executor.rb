@@ -267,9 +267,10 @@ module AnswersEngine
           unless pages_slice.empty?
             page_dups_ignored = pages_dup_count > 0 ? " (#{pages_dup_count} dups ignored)" : ''
             log_msgs << "#{pages_slice.count} out of #{total_pages} Pages#{page_dups_ignored}"
+
             unless save
               puts '----------------------------------------'
-              puts "Would have saved #{log_msgs.last}#{page_dups_ignored}"
+              puts "Trying to validate #{log_msgs.last}#{page_dups_ignored}"
               puts JSON.pretty_generate pages_slice
             end
           end
@@ -277,16 +278,21 @@ module AnswersEngine
           unless outputs_slice.empty?
             output_dups_ignored = outputs_dup_count > 0 ? " (#{outputs_dup_count} dups ignored)" : ''
             log_msgs << "#{outputs_slice.count} out of #{total_outputs} Outputs#{output_dups_ignored}"
+
             unless save
               puts '----------------------------------------'
-              puts "Would have saved #{log_msgs.last}#{output_dups_ignored}"
+              puts "Trying to validate #{log_msgs.last}#{output_dups_ignored}"
               puts JSON.pretty_generate outputs_slice
             end
           end
 
-          next unless save
-          log_msg = "Saving #{log_msgs.join(' and ')}."
-          puts "#{log_msg}"
+          # behave differently if it is a real save
+          if save
+            log_msg = "Saving #{log_msgs.join(' and ')}."
+            puts "#{log_msg}"
+          else
+            status = "#{status}_try"
+          end
 
           # saving to server
           response = update_to_server(
@@ -297,11 +303,20 @@ module AnswersEngine
             status: status)
 
           if response.code == 200
-            log_msg = "Saved."
-            puts "#{log_msg}"
+            if save
+              log_msg = "Saved."
+              puts "#{log_msg}"
+            else
+              puts "Validation successful"
+            end
           else
-            puts "Error: Unable to save Pages and/or Outputs to server: #{response.body}"
-            raise "Unable to save Pages and/or Outputs to server: #{response.body}"
+            if save
+              puts "Error: Unable to save Pages and/or Outputs to server: #{response.body}"
+              raise "Unable to save Pages and/or Outputs to server: #{response.body}"
+            else
+              puts "Error: Invalid Pages and/or Outputs: #{response.body}"
+              raise "Invalid Pages and/or Outputs: #{response.body}"
+            end
           end
         end
       end
