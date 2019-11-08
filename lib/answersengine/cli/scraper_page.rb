@@ -98,14 +98,15 @@ module AnswersEngine
 
       desc "refetch <scraper_name>", "Refetch Pages on a scraper's current job"
       long_desc <<-LONGDESC
-        Refetch pages in a scraper's current job. You need to specify either a --gid or --fetch-fail or --parse-fail.\x5
+        Refetch pages in a scraper's current job. You need to specify either a --gid or --fetch-fail or --parse-fail or --status.\x5
       LONGDESC
       option :gid, :aliases => :g, type: :string, desc: 'Refetch a specific GID'
       option :fetch_fail, type: :boolean, desc: 'Refetches only pages that fails fetching.'
       option :parse_fail, type: :boolean, desc: 'Refetches only pages that fails parsing.'
+      option :status, type: :string, desc: 'Refetches only pages with a specific status.'
       def refetch(scraper_name)
-        if !options.key?(:gid) && !options.key?(:fetch_fail) && !options.key?(:parse_fail)
-          puts "Must specify either a --gid or --fetch-fail or --parse-fail"
+        if !options.key?(:gid) && !options.key?(:fetch_fail) && !options.key?(:parse_fail) && !options.key?(:status)
+          puts "Must specify either a --gid, --fetch-fail, --parse-fail or --status"
           return
         end
         client = Client::ScraperJobPage.new(options)
@@ -114,16 +115,17 @@ module AnswersEngine
 
       desc "reparse <scraper_name>", "Reparse Pages on a scraper's current job"
       long_desc <<-LONGDESC
-        Reparse pages in a scraper's current job. You need to specify either a --gid or --parse-fail.\x5
+        Reparse pages in a scraper's current job. You need to specify either a --gid or --parse-fail or --status.\x5
       LONGDESC
       option :gid, :aliases => :g, type: :string, desc: 'Reparse a specific GID'
       option :parse_fail, type: :boolean, desc: 'Reparse only pages that fails parsing.'
+      option :status, type: :string, desc: 'Reparse only pages with a specific status.'
       def reparse(scraper_name)
         begin
           options[:vars] = JSON.parse(options[:vars]) if options[:vars]
 
-          if !options.key?(:gid) && !options.key?(:parse_fail)
-            puts "Must specify either a --gid or --parse-fail"
+          if !options.key?(:gid) && !options.key?(:parse_fail) && !options.key?(:status)
+            puts "Must specify either a --gid, --parse-fail or --status"
             return
           end
 

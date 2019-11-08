@@ -34,6 +34,7 @@ module AnswersEngine
         query[:pp] = opts[:per_page] if opts[:per_page]
         query[:fetchfail] = opts[:fetch_fail] if opts[:fetch_fail]
         query[:parsefail] = opts[:parse_fail] if opts[:parse_fail]
+        query[:status] = opts[:status] if opts[:status]
         query[:page_type] = opts[:page_type] if opts[:page_type]
         query[:gid] = opts[:gid] if opts[:gid]
 
