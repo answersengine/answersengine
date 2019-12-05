@@ -1,3 +1,4 @@
 #!/usr/bin/env ruby
-require 'answersengine/cli'
-AnswersEngine::CLI.start
+require 'answersengine'
+require 'datahen/cli'
+Datahen::CLI.start

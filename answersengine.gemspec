@@ -1,17 +1,16 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "answersengine/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "answersengine"
-  spec.version       = AnswersEngine::VERSION
+  spec.version       = "0.10.2"
   spec.authors       = ["Parama Danoesubroto"]
-  spec.email         = ["parama@answersengine.com"]
+  spec.email         = ["perry@datahen.com"]
 
-  spec.summary       = %q{AnswersEngine toolbelt for developers}
-  spec.description   = %q{AnswersEngine toolbelt to develop scrapers and other scripts}
-  spec.homepage      = "https://answersengine.com"
+  spec.summary       = %q{(Deprecated: Use datahen gem instead.) Compatibility alias for DataHen toolbelt for developers.}
+  spec.description   = %q{(Deprecated: Use datahen gem instead.) Compatibility alias for DataHen toolbelt to develop scrapers and other scripts.}
+  spec.homepage      = "https://datahen.com"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -34,14 +33,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
   spec.required_ruby_version = '>= 2.2.2'
-  spec.add_dependency "thor", "~> 0.20.3"
-  spec.add_dependency 'httparty', '~> 0.16.2'
-  spec.add_dependency 'nokogiri', '~> 1.6', '< 1.10'
+  spec.add_dependency "datahen", ">= 0"
   spec.add_development_dependency 'bundler', '>= 1.16'
   spec.add_development_dependency 'rake', '>= 10.0'
   spec.add_development_dependency 'minitest', '>= 5.11'
-  spec.add_development_dependency 'simplecov', '>= 0.16.1'
-  spec.add_development_dependency 'simplecov-console', '>= 0.4.2'
-  spec.add_development_dependency 'timecop', '>= 0.9.1'
   spec.add_development_dependency 'byebug', '>= 0'
 end

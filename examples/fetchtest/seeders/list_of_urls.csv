@@ -1,5 +1,0 @@
-url,page_type
-http://fetchtest.datahen.com,home
-http://fetchtest.datahen.com/statuses/200,statuses
-http://fetchtest.datahen.com/statuses/200?q=1,statuses
-http://fetchtest.datahen.com/statuses/200?q=2,statuses
